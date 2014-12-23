@@ -84,6 +84,9 @@
            (insert (current-kill 0)))))
 (global-set-key (kbd "C-c e") #'fc-eval-and-replace)
 
+(require 'show-xkcd)
+(joranvar/show-xkcd-if-latest-before-today)
+
 (provide 'init)
 ;;; init.el ends here
 
