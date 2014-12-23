@@ -11,8 +11,9 @@
   "If the modification date of xkcd-cache-latest is before today, call xkcd-show-latest."
   (let* ((today (time-to-days (current-time)))
 	 (day-of-latest (time-to-days (nth 5 (file-attributes xkcd-cache-latest 'string))))
-	 )
-    (if (or (time-less-p day-of-latest today) (not (file-exists-p xkcd-cache-latest)))
+	 (xkcd-latest-exists (file-exists-p xkcd-cache-latest)))
+    (if (or (time-less-p day-of-latest today)
+	    (not xkcd-latest-exists))
 	(xkcd))))
 
 (provide 'show-xkcd)
