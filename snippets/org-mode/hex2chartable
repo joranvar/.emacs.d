@@ -1,0 +1,9 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: hex2chartable
+# key: hex2chartable
+# binding: direct-keybinding
+# --
+| Code | Char |
+|------+------|
+|   $0   |      |
+#+TBLFM: \$2='(char-to-string (string-to-number \$1 16))
