@@ -1,0 +1,3 @@
+[submodule "site-lisp/nunit-emacs"]
+	path = site-lisp/nunit-emacs
+	url = https://github.com/abend/nunit-emacs.git

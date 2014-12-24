@@ -14,7 +14,11 @@
 (let ((settings-dir (expand-file-name "settings" user-emacs-directory))
       (site-lisp-dir (expand-file-name "site-lisp" user-emacs-directory)))
   (add-to-list 'load-path settings-dir)
-  (add-to-list 'load-path site-lisp-dir))
+  (add-to-list 'load-path site-lisp-dir)
+  ;; Add the site-lisp subdirs to the load path, too
+  (dolist (project (directory-files site-lisp-dir t "\\w+"))
+  (when (file-directory-p project)
+    (add-to-list 'load-path project))))
 
 ;; Customize emacs
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -28,6 +32,8 @@
 (require 'setup-helm)
 (require 'setup-vc)
 (require 'setup-csharp)
+
+(require 'nunit-results)
 
 (require 'eshell)
 (add-hook 'eshell-mode-hook
