@@ -7,6 +7,12 @@
 (require 'helm-config)
 (helm-mode t)
 
+(require-package 'projectile)
+(projectile-global-mode t)
+(setq projectile-completion-system 'helm)
+(require 'helm-projectile)
+(helm-projectile-on)
+
 (global-set-key (kbd "M-x") #'helm-M-x)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 (global-set-key (kbd "C-x b") #'helm-buffers-list)
