@@ -1,4 +1,4 @@
-;;; init.el --- My personal customization
+﻿;;; init.el --- My personal customization
 
 ;;; Commentary:
 ;;; Basic customization of my emacs editing environment
@@ -40,6 +40,8 @@
           (lambda ()
 	    (define-key eshell-mode-map [remap eshell-pcomplete] #'helm-esh-pcomplete)))
 
+(require-package 'haskell-mode)
+(require-package 'flycheck-haskell)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
 
@@ -67,7 +69,7 @@
 (eval-after-load 'flycheck
   '(add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
 
-
+(require-package 'aggressive-indent)
 (global-subword-mode t)
 (global-aggressive-indent-mode t)
 (global-flycheck-mode t)
@@ -76,7 +78,7 @@
 (define-key prog-mode-map (kbd "M-RET") 'emr-show-refactor-menu)
 (eval-after-load "emr" '(emr-initialize))
 
-(require 'yasnippet)
+(require-package 'yasnippet)
 (yas-global-mode t)
 
 (defun fc-eval-and-replace ()
@@ -91,7 +93,7 @@
 (global-set-key (kbd "C-c e") #'fc-eval-and-replace)
 
 (require 'show-xkcd)
-(joranvar/show-xkcd-if-latest-before-today)
+;;(joranvar/show-xkcd-if-latest-before-today)
 
 (provide 'init)
 ;;; init.el ends here

@@ -4,13 +4,14 @@
 ;;; Setup helm just as I like it
 
 ;;; Code:
+(require-package 'helm)
 (require 'helm-config)
 (helm-mode t)
 
 (require-package 'projectile)
 (projectile-global-mode t)
 (setq projectile-completion-system 'helm)
-(require 'helm-projectile)
+(require-package 'helm-projectile)
 (helm-projectile-on)
 
 (global-set-key (kbd "M-x") #'helm-M-x)
