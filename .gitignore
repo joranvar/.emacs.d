@@ -1,4 +1,6 @@
 *~
+eshell/
 elpa/
 projectile.cache
 projectile-bookmarks.eld
+server/
