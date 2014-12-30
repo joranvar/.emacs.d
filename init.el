@@ -5,6 +5,9 @@
 ;;; Layout and partitioning heavily influenced by https://github.com/magnars/.emacs.d.git
 
 ;;; Code:
+;; Global variable for OS based choices
+(setq is-win (equal system-type 'windows-nt))
+
 ;; First, rat poison, I mean, aestethics *evil grin*
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -17,15 +20,15 @@
   (add-to-list 'load-path site-lisp-dir)
   ;; Add the site-lisp subdirs to the load path, too
   (dolist (project (directory-files site-lisp-dir t "\\w+"))
-  (when (file-directory-p project)
-    (add-to-list 'load-path project))))
+    (when (file-directory-p project)
+      (add-to-list 'load-path project))))
+
+;; Make everything look good
+(require 'aesthetics)
 
 ;; Customize emacs
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
-
-;; Make everything look good
-(require 'aesthetics)
 
 ;; The rest of the packages, in order
 (require 'setup-package)
@@ -34,6 +37,9 @@
 (require 'setup-csharp)
 
 (require 'nunit-results)
+
+(if is-win
+    (require-package 'helm-w32-launcher))
 
 (require 'eshell)
 (add-hook 'eshell-mode-hook

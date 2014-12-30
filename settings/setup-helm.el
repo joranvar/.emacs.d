@@ -4,7 +4,10 @@
 ;;; Setup helm just as I like it
 
 ;;; Code:
+(require 'setup-package)
+
 (require-package 'helm)
+(require-package 'ac-helm)
 (require 'helm-config)
 (helm-mode t)
 

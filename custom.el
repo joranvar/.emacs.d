@@ -10,6 +10,4 @@
  '(flycheck-csharp-omnisharp-curl-executable "curl")
  '(haskell-font-lock-symbols (quote unicode))
  '(helm-github-stars-username "joranvar")
- '(omnisharp-imenu-support t)
- '(omnisharp-server-executable-path
-   "/home/joranvar/git_pull/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe"))
+ '(omnisharp-imenu-support t))
