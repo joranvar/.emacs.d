@@ -7,15 +7,18 @@
 (require 'setup-package)
 
 (require-package 'helm)
-(require-package 'ac-helm)
 (require 'helm-config)
+
 (helm-mode t)
+(require-package 'ac-helm)
 
 (require-package 'projectile)
 (projectile-global-mode t)
 (setq projectile-completion-system 'helm)
 (require-package 'helm-projectile)
 (helm-projectile-on)
+
+(global-set-key (kbd "C-c p p") #'helm-projectile-switch-project)
 
 (global-set-key (kbd "M-x") #'helm-M-x)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
