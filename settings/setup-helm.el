@@ -18,6 +18,10 @@
 (require-package 'helm-projectile)
 (helm-projectile-on)
 
+(if is-win (setq projectile-indexing-method 'alien))
+
+(require-package 'project-explorer)
+
 (global-set-key (kbd "C-c p p") #'helm-projectile-switch-project)
 
 (global-set-key (kbd "M-x") #'helm-M-x)
