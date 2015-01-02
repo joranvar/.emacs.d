@@ -23,6 +23,9 @@
     (when (file-directory-p project)
       (add-to-list 'load-path project))))
 
+(if (file-directory-p "c:/tools/cygwin/bin")
+    (add-to-list 'exec-path "c:/tools/cygwin/bin"))
+
 ;; Make everything look good
 (require 'aesthetics)
 
@@ -36,7 +39,7 @@
 (require 'setup-vc)
 (require 'setup-csharp)
 
-(require 'nunit-results)
+;; (require 'nunit-results)
 
 (if is-win
     (require-package 'helm-w32-launcher))
