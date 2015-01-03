@@ -12,7 +12,7 @@
 (setq omnisharp-server-executable-path
       (substitute-in-file-name
        (if is-win
-	   "$HOME/Source/Repos/OmniSharpServer/OmniSharp/bin/Debug/OmniSharp.exe"
+	   "C:\\Users\\bart.post\\Source\\Repos\\omnisharp-server\\OmniSharp\\bin\\Debug\\OmniSharp.exe"
 	 "$HOME/git_pull/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")))
 
 ;; Bind auto complete action
