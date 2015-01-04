@@ -1,3 +1,6 @@
 [submodule "site-lisp/nunit-emacs"]
 	path = site-lisp/nunit-emacs
 	url = https://github.com/abend/nunit-emacs.git
+[submodule "site-lisp/steam.el"]
+	path = site-lisp/steam.el
+	url = https://github.com/Kungsgeten/steam.el

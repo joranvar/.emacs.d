@@ -39,6 +39,10 @@
 (require 'setup-vc)
 (require 'setup-csharp)
 
+;; Manage my games
+(require 'steam)
+(setq steam-username "joranvar")
+
 ;; (require 'nunit-results)
 
 (if is-win
