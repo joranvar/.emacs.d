@@ -38,6 +38,7 @@
 (require 'setup-helm)
 (require 'setup-vc)
 (require 'setup-csharp)
+(require 'setup-org)
 
 ;; Manage my games
 (require 'steam)
