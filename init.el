@@ -41,6 +41,7 @@
 (require 'setup-vc)
 (require 'setup-csharp)
 (require 'setup-org)
+(require 'setup-vbmode)
 
 ;; Manage my games
 (require 'steam)
