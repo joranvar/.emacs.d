@@ -13,6 +13,8 @@
 				"$HOME/Documents/org")
   "The location of my org files.")
 
+(global-set-key (kbd "C-c a") #'org-agenda)
+
 (provide 'setup-org)
 ;;; setup-org.el ends here
 
