@@ -18,6 +18,8 @@
   (when (file-regular-p orgfile)
     (add-to-list 'org-agenda-files orgfile)))
 
+(require-package 'org-pomodoro)
+
 (provide 'setup-org)
 ;;; setup-org.el ends here
 
