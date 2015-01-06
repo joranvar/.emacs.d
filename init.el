@@ -8,6 +8,8 @@
 ;; Global variable for OS based choices
 (setq is-win (equal system-type 'windows-nt))
 
+(when is-win (setenv "HOME" "C:\\Users\\bart.post"))
+
 ;; First, rat poison, I mean, aestethics *evil grin*
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -39,6 +41,7 @@
 (require 'setup-vc)
 (require 'setup-csharp)
 (require 'setup-org)
+(require 'setup-vbmode)
 
 ;; Manage my games
 (require 'steam)

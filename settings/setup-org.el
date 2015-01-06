@@ -8,12 +8,15 @@
 ;;; Code:
 (require-package 'org)
 
-
 (defvar joranvar/org-directory (substitute-in-file-name
 				"$HOME/Documents/org")
   "The location of my org files.")
 
 (global-set-key (kbd "C-c a") #'org-agenda)
+
+(dolist (orgfile (directory-files joranvar/org-directory t "\\w+\\.org" t))
+  (when (file-regular-p orgfile)
+    (add-to-list 'org-agenda-files orgfile)))
 
 (provide 'setup-org)
 ;;; setup-org.el ends here
