@@ -12,6 +12,10 @@
 				"$HOME/Documents/org")
   "The location of my org files.")
 
+;; Publication
+(add-to-list 'org-latex-packages-alist '("" "tabularx"))
+(setq org-latex-default-table-environment "tabularx")
+
 (global-set-key (kbd "C-c a") #'org-agenda)
 
 (dolist (orgfile (directory-files joranvar/org-directory t "\\w+\\.org" t))
