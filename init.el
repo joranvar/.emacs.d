@@ -47,6 +47,7 @@
 (require 'setup-helm)
 (require 'setup-vc)
 (require 'setup-csharp)
+(require 'setup-fsharp)
 (require 'setup-org)
 (require 'setup-vbmode)
 
