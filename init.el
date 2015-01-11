@@ -6,7 +6,7 @@
 
 ;;; Code:
 ;; Global variable for OS based choices
-(setq is-win (equal system-type 'windows-nt))
+(defvar is-win (equal system-type 'windows-nt))
 
 (when is-win (setenv "HOME" "C:\\Users\\bart.post"))
 
@@ -28,6 +28,13 @@
 (if (file-directory-p "c:/tools/cygwin/bin")
     (add-to-list 'exec-path "c:/tools/cygwin/bin"))
 
+(require 'setup-package)
+(setq load-prefer-newer t)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(require 'use-package)
+
 ;; Make everything look good
 (require 'aesthetics)
 
@@ -36,7 +43,7 @@
 (load custom-file)
 
 ;; The rest of the packages, in order
-(require 'setup-package)
+(require 'eieio)
 (require 'setup-helm)
 (require 'setup-vc)
 (require 'setup-csharp)
@@ -119,3 +126,36 @@
 ;; Local Variables:
 ;; flycheck-emacs-lisp-load-path: inherit
 ;; End:
+
+(setq-default mode-line-format
+              '("%e" ; print error message about full memory.
+                mode-line-front-space
+                ; mode-line-mule-info
+                ; mode-line-client
+                mode-line-modified
+                ; mode-line-remote
+                ; mode-line-frame-identification
+                mode-line-buffer-identification
+                "   "
+                ; mode-line-position
+                ; (vc-mode vc-mode)
+                ; "  "
+                mode-line-modes
+                "   "
+                ; mode-line-misc-info
+                display-time-string
+                "   "
+                battery-mode-line-string
+                mode-line-end-spaces))
+
+(display-time-mode 1)
+(setq display-time-format "%a %m/%d%t%R")
+(display-battery-mode 1)
+(setq battery-mode-line-format "%p%%") ; Default: "[%b%p%%]"
+
+(use-package linum-relative
+  :ensure t
+  :init
+  (setq linum-format 'linum-relative)
+  :config
+  (setq linum-relative-current-symbol ""))
