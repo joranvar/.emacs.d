@@ -14,5 +14,9 @@
 ;; I like to see more, smaller is better
 (set-face-attribute 'default nil :height 100)
 
+;; Powerline modeline!
+(require-package 'smart-mode-line)
+(require-package 'smart-mode-line-powerline-theme)
+
 (provide 'aesthetics)
 ;;; aesthetics.el ends here
