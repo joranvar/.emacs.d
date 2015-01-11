@@ -158,5 +158,6 @@
   :ensure t
   :init
   (setq linum-format 'linum-relative)
+  (global-linum-mode t)
   :config
   (setq linum-relative-current-symbol ""))
