@@ -1,7 +1,29 @@
 * Introduction
 
 This document contains the settings for use of emacs. It is heavily
-modeled after the literate org settings file by [[https://github.com/mfogleman/config][mfogleman]].
+modeled after the literate org settings file by [[https://github.com/mwfogleman/config][mwfogleman]].
+
+* Interacting with the host operating system
+Of course, emacs can not (yet) run as a [[http://c2.com/cgi/wiki?EmacsAsOperatingSystem][standalone operating
+system]]. So for certain tasks, it needs to interact with the host (and
+so do I).
+
+** Which sound player to use?
+#+BEGIN_SRC emacs-lisp
+  (defvar joranvar/audio-player
+    (or (executable-find "aplay") 
+        (executable-find "afplay")
+        "c:/Program Files/MPC-HC/mpc-hc64.exe")
+    "The executable that makes sound.")
+#+END_SRC
+
+** Where can I find gpg?
+#+BEGIN_SRC emacs-lisp
+  (defvar joranvar/gpg-location
+    (or (executable-find "gpg")
+        "c:/Program Files/GNU/GnuPG/pub/gpg.exe")
+    "The executable that provides encryption.")
+#+END_SRC
 
 * General settings
 
@@ -11,6 +33,51 @@ modeled after the literate org settings file by [[https://github.com/mfogleman/c
   (setq user-full-name "Bart Post"
         user-mail-address "bart.post@gmail.com")
 #+end_src
+
+** Private information
+
+Of course I won't put the private stuff in here. My private settings
+are in an encrypted file.
+
+In order to read it, epa must be enabled. However, I don't want it to
+use any gpg-agent if I'm on a terminal for instance. The following
+piece of advice should help switch to manual pin entry when I choose
+so (thanks [[http://www.enigmacurry.com/2009/01/14/extending-emacs-with-advice/][enigma curry]]!).
+
+#+BEGIN_SRC emacs-lisp
+  (defadvice epg--start (around advice-epg-disable-agent disable)
+    "Make epg--start not able to find a gpg-agent"
+    (let ((agent (getenv "GPG_AGENT_INFO")))
+      (setenv "GPG_AGENT_INFO" nil)
+      ad-do-it
+      (setenv "GPG_AGENT_INFO" agent)))
+
+  (defun epg-disable-agent ()
+    "Make EasyPG bypass any gpg-agent"
+    (interactive)
+    (ad-enable-advice 'epg--start 'around 'advice-epg-disable-agent)
+    (ad-activate 'epg--start)
+    (message "EasyPG gpg-agent bypassed"))
+
+  (defun epg-enable-agent ()
+    "Make EasyPG use a gpg-agent after having been disabled with epg-disable-agent"
+    (interactive)
+    (ad-disable-advice 'epg--start 'around 'advice-epg-disable-agent)
+    (ad-activate 'epg--start)
+    (message "EasyPG gpg-agent re-enabled"))
+#+END_SRC
+
+Default is to disable the gpg-agent.
+
+#+BEGIN_SRC emacs-lisp
+  (epg-disable-agent)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (load (expand-file-name "secrets.el.gpg" user-emacs-directory))
+#+END_SRC
+
+* Utils
 
 ** Get the latest use-package and continue from there
 
@@ -30,19 +97,209 @@ modeled after the literate org settings file by [[https://github.com/mfogleman/c
 * Interacting with the host operating system
 ** Which sound player to use?
 #+BEGIN_SRC emacs-lisp
-  (defvar joranvar/audio-player
-    (or (executable-find "aplay") 
-        (executable-find "afplay")
-        "c:/Program Files/MPC-HC/mpc-hc64.exe")
-    "The executable that makes sound.")
+  (use-package async
+    :ensure t)
+
+  (use-package paradox
+    :ensure t
+    :config (setq paradox-execute-asynchronously t)
+    :init (paradox-enable))
 #+END_SRC
+
+** Dash
+
+Functional programming in elisp!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package dash
+    :ensure t)
+#+END_SRC
+
 * Visual
+
+Beauty is in the eye of the beholder. So let's make emacs
+aesthetically pleasing.
+
+** Get rid of the bars
+
+I don't like to use the mouse, and I don't need the bars that take up
+screen real estate. Make them go away.
+
+#+BEGIN_SRC emacs-lisp
+  (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+  (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+#+END_SRC
+
+** Diminish some minor modes
+
+#+BEGIN_QUOTE
+"When we diminish a mode, we are saying we want it to continue doing
+its work for us, but we no longer want to be reminded of it. It
+becomes a night worker, like a janitor; it becomes an invisible man;
+it remains a component, perhaps an important one, sometimes an
+indispensable one, of the mechanism that maintains the day-people's
+world, but its place in their thoughts is diminished, usually to
+nothing. As we grow old we diminish more and more such thoughts, such
+people, usually to nothing."
+#+END_QUOTE
+
+- Will Mengarini in [[http://www.eskimo.com/~seldon/diminish.el][diminish.el]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package diminish
+    :ensure t)
+#+END_SRC
+
+** Choose a theme
+
+I used to have solarized, but I'm gonna try [[https://github.com/fniessen/emacs-leuven-theme][Leuven-theme]] for a
+while. It works great with org-mode.
+
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'leuven t)
+#+END_SRC
+
+I also want the whole line to be fontified (background color) in
+org-mode headings.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-fontify-whole-heading-line t)
+#+END_SRC
+
+** Font size
+
+Set a smaller font size. More text on the screen is better.
+
+#+BEGIN_SRC emacs-lisp
+  (set-face-attribute 'default nil :height 100)
+#+END_SRC
+
+** Fontify in org-mode
+
+This goes a long way!
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-fontify-natively t)
+#+END_SRC
+
 * Productivity
 
-I like to work with the pomodoro technique. The ticking sound reminds me of 
+** Pomodoro
+I like to work with the pomodoro technique. The ticking sound reminds
+me that I need to keep my focus.
+
 #+BEGIN_SRC emacs-lisp
   (use-package org-pomodoro
     :ensure t
     :init (setq org-pomodoro-play-ticking-sounds t
                 org-pomodoro-audio-player joranvar/audio-player))
+#+END_SRC
+
+* Less typing
+
+Several packages and settings will help me type less to accomplish the
+same. The main theme is auto completion (read: helm).
+
+** Helm
+
+Make sure that we have helm, then bind some keys.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-config
+    :ensure helm
+    :init (helm-mode t)
+    :bind (("M-x" . helm-M-x)
+           ("C-x C-f" . helm-find-files)
+           ("C-x b" . helm-buffers-list)))
+#+END_SRC
+
+** Projectile
+
+When navigating to a file is as easy as choosing the project name from
+a list, that *does* save a lot of typing.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :bind (("M-p" . helm-projectile-find-file)
+           ("M-P" . helm-projectile-switch-project))
+    :diminish projectile-mode
+    :init
+    (projectile-global-mode)
+    (setq projectile-enable-caching t)
+    (use-package helm-projectile
+      :ensure t)
+    (setq magit-repo-dirs (mapcar (lambda (dir)
+                                    (substring dir 0 -1))
+                                  (-filter (lambda (project)
+                                             (file-directory-p (concat project "/.git/")))
+                                           (projectile-relevant-known-projects)))
+          magit-repo-dirs-depth 1))
+#+END_SRC
+
+* Version control
+
+** Magit
+
+Of course, the most beautiful git client of them all. Git-flow does
+not (yet) work in the windows host, so we don't load it there.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :ensure t
+    :bind ("M-g" . magit-status)
+    :config (use-package magit-gitflow
+              :if (eq system-type 'gnu/linux)
+              :ensure t
+              :config (add-hook 'magit-mode-hook #'turn-on-magit-gitflow)))
+#+END_SRC
+
+** Diff highlighting
+
+The feedback when visiting a version controlled file is nice.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package diff-hl
+    :ensure t
+    :config (add-hook 'find-file-hook (lambda () (diff-hl-mode t)))
+#+END_SRC
+
+* Hobbies
+
+** Feeds
+
+*** TODO Insert elfeed
+
+*** TODO Add xkcd
+
+*** TODO Add the following rss feeds
+- What the .emacs.d
+- Emacs Rocks
+- (or emacs
+- emacs-fu
+- blog by mwfogleman
+- /r/emacs, /r/fsharp and /r/programmerhumor?
+- scott hanselman
+
+** Games
+
+*** TODO Add steam
+
+*** TODO Add LoL?
+
+* Editing
+
+Gee, there's also a section for configuring the text editing part of
+the "text editor" ㋛
+
+** [[http://endlessparentheses.com/hungry-delete-mode.html?source%253Drss][Hungry delete]]
+
+Oh, how much I like this feature! Delete all whitespace in the
+direction of the delete action.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package hungry-delete
+    :ensure t
+    :init (global-hungry-delete-mode))
 #+END_SRC
