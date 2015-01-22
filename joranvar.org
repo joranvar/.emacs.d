@@ -3,6 +3,28 @@
 This document contains the settings for use of emacs. It is heavily
 modeled after the literate org settings file by [[https://github.com/mwfogleman/config][mwfogleman]].
 
+* Interacting with the host operating system
+Of course, emacs can not (yet) run as a [[http://c2.com/cgi/wiki?EmacsAsOperatingSystem][standalone operating
+system]]. So for certain tasks, it needs to interact with the host (and
+so do I).
+
+** Which sound player to use?
+#+BEGIN_SRC emacs-lisp
+  (defvar joranvar/audio-player
+    (or (executable-find "aplay") 
+        (executable-find "afplay")
+        "c:/Program Files/MPC-HC/mpc-hc64.exe")
+    "The executable that makes sound.")
+#+END_SRC
+
+** Where can I find gpg?
+#+BEGIN_SRC emacs-lisp
+  (defvar joranvar/gpg-location
+    (or (executable-find "gpg")
+        "c:/Program Files/GNU/GnuPG/pub/gpg.exe")
+    "The executable that makes sound.")
+#+END_SRC
+
 * General settings
 
 ** Personal information
@@ -76,16 +98,6 @@ Paradox package management is a bit more. Right now I'm trying it out.
     :ensure t
     :config
     (setq paradox-execute-asynchronously t))
-#+END_SRC
-
-* Interacting with the host operating system
-** Which sound player to use?
-#+BEGIN_SRC emacs-lisp
-  (defvar joranvar/audio-player
-    (or (executable-find "aplay") 
-        (executable-find "afplay")
-        "c:/Program Files/MPC-HC/mpc-hc64.exe")
-    "The executable that makes sound.")
 #+END_SRC
 * Visual
 * Productivity
