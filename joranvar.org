@@ -100,6 +100,7 @@ Paradox package management is a bit more. Right now I'm trying it out.
     (setq paradox-execute-asynchronously t))
 #+END_SRC
 * Visual
+
 * Productivity
 
 I like to work with the pomodoro technique. The ticking sound reminds
@@ -110,4 +111,20 @@ me that I need to keep my focus.
     :ensure t
     :init (setq org-pomodoro-play-ticking-sounds t
                 org-pomodoro-audio-player joranvar/audio-player))
+#+END_SRC
+
+* Editing
+
+Gee, there's also a section for configuring the text editing part of
+the "text editor" ㋛
+
+** [[http://endlessparentheses.com/hungry-delete-mode.html?source%253Drss][Hungry delete]]
+
+Oh, how much I like this feature! Delete all whitespace in the
+direction of the delete action.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package hungry-delete
+    :ensure t
+    :init (global-hungry-delete-mode))
 #+END_SRC
