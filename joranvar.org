@@ -64,6 +64,20 @@ so (thanks [[http://www.enigmacurry.com/2009/01/14/extending-emacs-with-advice/]
   (require 'use-package)
 #+END_SRC
 
+** Paradox
+
+Paradox package management is a bit more. Right now I'm trying it out.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package async
+    :ensure t)
+
+  (use-package paradox
+    :ensure t
+    :config
+    (setq paradox-execute-asynchronously t))
+#+END_SRC
+
 * Interacting with the host operating system
 ** Which sound player to use?
 #+BEGIN_SRC emacs-lisp
