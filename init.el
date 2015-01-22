@@ -2,10 +2,29 @@
 
 ;;; Commentary:
 ;;; Basic customization of my emacs editing environment
-;;; Layout and partitioning heavily influenced by https://github.com/magnars/.emacs.d.git
+;;; Layout and partitioning heavily influenced by https://github.com/mwfogleman/config
 
 ;;; Code:
+;; First off, require 'package and 'org, in order to be able to read the main: init.org
+(require 'package)
+
+(package-initialize)
+(setq package-enable-at-startup nil)
+
+(require 'org)
+(org-babel-load-file (expand-file-name "joranvar.org" user-emacs-directory))
+
+;; Keep emacs Custom-settings in separate file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
+
+;;; init.el ends here
+
+
 ;; Global variable for OS based choices
+
+
+
 (defvar is-win (equal system-type 'windows-nt))
 
 (when is-win (setenv "HOME" "C:\\Users\\bart.post"))

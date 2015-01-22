@@ -1,0 +1,48 @@
+* Introduction
+
+This document contains the settings for use of emacs. It is heavily
+modeled after the literate org settings file by [[https://github.com/mfogleman/config][mfogleman]].
+
+* General settings
+
+** Personal information
+
+#+begin_src emacs-lisp
+  (setq user-full-name "Bart Post"
+        user-mail-address "bart.post@gmail.com")
+#+end_src
+
+** Get the latest use-package and continue from there
+
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  (add-to-list 'package-archives
+               '("melpa" . "http://melpa.org/packages/") t)
+  (setq load-prefer-newer t)
+  (package-initialize)
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+
+  (require 'use-package)
+#+END_SRC
+
+* Interacting with the host operating system
+** Which sound player to use?
+#+BEGIN_SRC emacs-lisp
+  (defvar joranvar/audio-player
+    (or (executable-find "aplay") 
+        (executable-find "afplay")
+        "c:/Program Files/MPC-HC/mpc-hc64.exe")
+    "The executable that makes sound.")
+#+END_SRC
+* Visual
+* Productivity
+
+I like to work with the pomodoro technique. The ticking sound reminds me of 
+#+BEGIN_SRC emacs-lisp
+  (use-package org-pomodoro
+    :ensure t
+    :init (setq org-pomodoro-play-ticking-sounds t
+                org-pomodoro-audio-player joranvar/audio-player))
+#+END_SRC
