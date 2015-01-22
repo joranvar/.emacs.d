@@ -12,6 +12,43 @@ modeled after the literate org settings file by [[https://github.com/mwfogleman/
         user-mail-address "bart.post@gmail.com")
 #+end_src
 
+** Private information
+
+Of course I won't put the private stuff in here. My private settings
+are in an encrypted file.
+
+In order to read it, epa must be enabled. However, I don't want it to
+use any gpg-agent if I'm on a terminal for instance. The following
+piece of advice should help switch to manual pin entry when I choose
+so (thanks [[http://www.enigmacurry.com/2009/01/14/extending-emacs-with-advice/][enigma curry]]!).
+
+#+BEGIN_SRC emacs-lisp
+  (defadvice epg--start (around advice-epg-disable-agent disable)
+    "Make epg--start not able to find a gpg-agent"
+    (let ((agent (getenv "GPG_AGENT_INFO")))
+      (setenv "GPG_AGENT_INFO" nil)
+      ad-do-it
+      (setenv "GPG_AGENT_INFO" agent)))
+
+  (defun epg-disable-agent ()
+    "Make EasyPG bypass any gpg-agent"
+    (interactive)
+    (ad-enable-advice 'epg--start 'around 'advice-epg-disable-agent)
+    (ad-activate 'epg--start)
+    (message "EasyPG gpg-agent bypassed"))
+
+  (defun epg-enable-agent ()
+    "Make EasyPG use a gpg-agent after having been disabled with epg-disable-agent"
+    (interactive)
+    (ad-disable-advice 'epg--start 'around 'advice-epg-disable-agent)
+    (ad-activate 'epg--start)
+    (message "EasyPG gpg-agent re-enabled"))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (load (expand-file-name "secrets.el.gpg" user-emacs-directory))
+#+END_SRC
+
 ** Get the latest use-package and continue from there
 
 #+BEGIN_SRC emacs-lisp
