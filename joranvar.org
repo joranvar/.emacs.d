@@ -94,8 +94,10 @@ Default is to disable the gpg-agent.
   (require 'use-package)
 #+END_SRC
 
-* Interacting with the host operating system
-** Which sound player to use?
+** Paradox
+
+Paradox package management is a bit more. Right now I'm trying it out.
+
 #+BEGIN_SRC emacs-lisp
   (use-package async
     :ensure t)
@@ -186,6 +188,7 @@ This goes a long way!
 * Productivity
 
 ** Pomodoro
+
 I like to work with the pomodoro technique. The ticking sound reminds
 me that I need to keep my focus.
 
