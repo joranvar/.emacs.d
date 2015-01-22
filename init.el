@@ -51,6 +51,9 @@
 (require 'setup-org)
 (require 'setup-vbmode)
 
+(use-package visual-regexp
+  :ensure t)
+
 ;; Manage my games
 (require 'steam)
 (setq steam-username "joranvar")

@@ -18,6 +18,15 @@
 (require-package 'helm-projectile)
 (helm-projectile-on)
 
+(eval-after-load "projectile"
+  '(progn (setq magit-repo-dirs (mapcar (lambda (dir)
+					  (substring dir 0 -1))
+					(remove-if-not (lambda (project)
+                                                             (file-directory-p (concat project "/.git/")))
+						       (projectile-relevant-known-projects)))
+		magit-repo-dirs-depth 1)))
+
+
 (if is-win (setq projectile-indexing-method 'alien))
 
 (require-package 'project-explorer)

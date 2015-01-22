@@ -24,6 +24,9 @@
 
 (require-package 'org-pomodoro)
 
+(setq org-time-clocksum-format
+      '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
+
 (provide 'setup-org)
 ;;; setup-org.el ends here
 
