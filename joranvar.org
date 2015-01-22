@@ -90,7 +90,9 @@ Paradox package management is a bit more. Right now I'm trying it out.
 * Visual
 * Productivity
 
-I like to work with the pomodoro technique. The ticking sound reminds me of 
+I like to work with the pomodoro technique. The ticking sound reminds
+me that I need to keep my focus.
+
 #+BEGIN_SRC emacs-lisp
   (use-package org-pomodoro
     :ensure t
