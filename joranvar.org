@@ -1,7 +1,7 @@
 * Introduction
 
 This document contains the settings for use of emacs. It is heavily
-modeled after the literate org settings file by [[https://github.com/mfogleman/config][mfogleman]].
+modeled after the literate org settings file by [[https://github.com/mwfogleman/config][mwfogleman]].
 
 * General settings
 
