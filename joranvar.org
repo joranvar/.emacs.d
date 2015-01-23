@@ -174,7 +174,7 @@ org-mode headings.
 Set a smaller font size. More text on the screen is better.
 
 #+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'default nil :height 100)
+  (set-face-attribute 'default nil :height (if (eq system-type 'gnu/linux) 100 90))
 #+END_SRC
 
 ** Fontify in org-mode
