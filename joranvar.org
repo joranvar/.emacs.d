@@ -171,6 +171,13 @@ org-mode headings.
   (setq org-fontify-whole-heading-line t)
 #+END_SRC
 
+** TODO Toggle between light and dark
+I want to be able to toggle between light and dark mode (when contrast is needed).
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c t") (lambda () (interactive) (progn (setq frame-background-mode (if (eq frame-background-mode 'light) 'dark 'light)) (load-theme 'leuven t))))
+#+END_SRC
+
 ** Font size
 
 Set a smaller font size. More text on the screen is better.
@@ -231,16 +238,17 @@ a list, that *does* save a lot of typing.
            ("M-P" . helm-projectile-switch-project))
     :diminish projectile-mode
     :init
-    (projectile-global-mode)
-    (setq projectile-enable-caching t)
-    (use-package helm-projectile
-      :ensure t)
-    (setq magit-repo-dirs (mapcar (lambda (dir)
-                                    (substring dir 0 -1))
-                                  (-filter (lambda (project)
-                                             (file-directory-p (concat project "/.git/")))
-                                           (projectile-relevant-known-projects)))
-          magit-repo-dirs-depth 1))
+    (progn
+      (projectile-global-mode)
+      (setq projectile-enable-caching t)
+      (use-package helm-projectile
+        :ensure t)
+      (setq magit-repo-dirs (mapcar (lambda (dir)
+                                      (substring dir 0 -1))
+                                    (-filter (lambda (project)
+                                               (file-directory-p (concat project "/.git/")))
+                                             (projectile-relevant-known-projects)))
+            magit-repo-dirs-depth 1)))
 #+END_SRC
 
 * Version control
@@ -268,6 +276,28 @@ The feedback when visiting a version controlled file is nice.
   (use-package diff-hl
     :ensure t
     :config (add-hook 'find-file-hook (lambda () (diff-hl-mode t))))
+#+END_SRC
+
+* Org mode
+
+Keeping things organized, that's an aspiration I'd like to fulfill,
+and org-mode might be the tool that'll save me.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :init (defvar joranvar/org-directory (substitute-in-file-name
+                                          "$HOME/Documents/org")
+            "The location of my org files.")
+    :bind ("C-c a" . org-agenda)
+    :config
+    (progn
+      (dolist (orgfile (directory-files joranvar/org-directory t "\\w+\\.org" t))
+        (when (file-regular-p orgfile)
+          (add-to-list 'org-agenda-files orgfile)))
+      (add-to-list 'org-agenda-files (expand-file-name "joranvar.org" user-emacs-directory))
+      (setq org-time-clocksum-format
+            '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
+      ))
 #+END_SRC
 
 * Hobbies
