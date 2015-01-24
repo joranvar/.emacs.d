@@ -104,8 +104,10 @@ Paradox package management is a bit more. Right now I'm trying it out.
 
   (use-package paradox
     :ensure t
-    :config (setq paradox-execute-asynchronously t)
-    :init (paradox-enable))
+    :config
+    (progn
+      (setq paradox-execute-asynchronously t)
+      (paradox-enable)))
 #+END_SRC
 
 ** Dash
