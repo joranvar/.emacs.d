@@ -25,6 +25,16 @@ so do I).
     "The executable that provides encryption.")
 #+END_SRC
 
+** Where can I find omnisharp?
+#+BEGIN_SRC emacs-lisp
+    (defvar joranvar/omnisharp-path
+      (substitute-in-file-name
+       (if (eq system-type 'gnu/linux)
+           "$HOME/git_pull/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe"
+         "$HOME\\Source\\Repos\\omnisharp-server\\OmniSharp\\bin\\Debug\\OmniSharp.exe"))
+      "The executable that provides csharp checking.")
+#+END_SRC
+
 * General settings
 
 ** Personal information
@@ -274,6 +284,32 @@ The feedback when visiting a version controlled file is nice.
   (use-package diff-hl
     :ensure t
     :config (add-hook 'find-file-hook (lambda () (diff-hl-mode t))))
+#+END_SRC
+
+* Programming
+
+** C#
+
+C# development is what I do daily for a living. By day I use Visual
+Studio, together with Resharper and NCrunch. Those are very good
+tools, but I do miss the comfort of my own, personalized OS when I am
+using them. But when I return to emacs, I miss the refactoring tools
+and automatic testing and feedback that I have grown accustomed to.
+
+Omnisharp and flycheck are two tools that may help me out here. I am
+still hoping to find some bridge between flycheck and nunit/xunit,
+though.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package omnisharp
+    :ensure t
+    :config
+    (progn
+      (add-hook 'csharp-mode-hook #'omnisharp-mode)
+      (setq omnisharp-server-executable-path joranvar/omnisharp-path)
+      (define-key omnisharp-mode-map (kbd "M-.") #'omnisharp-auto-complete)
+      (define-key omnisharp-mode-map (kbd "M-RET") #'omnisharp-run-code-action-refactoring)
+      (define-key omnisharp-mode-map (kbd "<C-return>") #'omnisharp-fix-code-issue-at-point)))
 #+END_SRC
 
 * Org mode
