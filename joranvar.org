@@ -236,6 +236,18 @@ Make sure that we have helm, then bind some keys.
            ("C-x b" . helm-buffers-list)))
 #+END_SRC
 
+** Writable grep
+
+Having wgrep makes replace/edit on multiple lines quite nice! Use
+helm-occur to find occurrances, C-x C-s to save to a helm-grep-mode
+buffer, then C-c C-p to enter wgrep mode.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package wgrep
+    :ensure t)
+#+END_SRC
+
+
 ** Projectile
 
 When navigating to a file is as easy as choosing the project name from
