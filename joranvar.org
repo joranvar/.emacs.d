@@ -185,7 +185,18 @@ org-mode headings.
 I want to be able to toggle between light and dark mode (when contrast is needed).
 
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c t") (lambda () (interactive) (progn (setq frame-background-mode (if (eq frame-background-mode 'light) 'dark 'light)) (load-theme 'leuven t))))
+  (global-set-key
+   (kbd "C-c t")
+   (lambda () (interactive) (progn
+                         (setq frame-background-mode
+                               (if (eq frame-background-mode 'light)
+                                   'dark
+                                 'light))
+                         (if (eq frame-background-mode 'light)
+                             (progn (disable-theme 'wombat)
+                                    (load-theme 'leuven t))
+                           (progn (disable-theme 'leuven)
+                                  (load-theme 'wombat t))))))
 #+END_SRC
 
 ** Font size
@@ -202,6 +213,14 @@ This goes a long way!
 
 #+BEGIN_SRC emacs-lisp
   (setq org-src-fontify-natively t)
+#+END_SRC
+
+** Pretty symbols
+
+Yummy looking code everywhere!
+
+#+BEGIN_SRC emacs-lisp
+  (global-prettify-symbols-mode t)
 #+END_SRC
 
 * Productivity
