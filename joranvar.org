@@ -247,7 +247,6 @@ buffer, then C-c C-p to enter wgrep mode.
     :ensure t)
 #+END_SRC
 
-
 ** Projectile
 
 When navigating to a file is as easy as choosing the project name from
@@ -272,6 +271,40 @@ a list, that *does* save a lot of typing.
                                              (projectile-relevant-known-projects)))
             magit-repo-dirs-depth 1)))
 #+END_SRC
+
+** Focus-follow-mouse
+
+This is something I really like in any window manager. As emacs does
+consist windows (containing buffers), I really like to use it here,
+too. Although ace-jump-window will complement this (see next item).
+
+#+BEGIN_SRC emacs-lisp
+  (setq mouse-autoselect-window t)
+#+END_SRC
+
+** Ace-jump-mode
+
+This is a powerful "go where I'm looking at now" mode. Type "M-o", the
+first char of the word you're looking at, and the letter that then
+overlays it. BAM, you're there. Thanks to [[https://www.youtube.com/watch?feature=player_embedded&v=UZkpmegySnc#!][emacs rocks!]] for pointing
+this out!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-jump-mode
+    :ensure t
+    :bind (("M-o" . ace-jump-mode)
+           ("M-O" . ace-jump-mode-pop-mark))
+    :config (ace-jump-mode-enable-mark-sync))
+#+END_SRC
+
+** Auto-fill-mode
+
+This is a no-brainer.
+
+#+BEGIN_SRC emacs-lisp
+  (auto-fill-mode t)
+#+END_SRC
+
 
 * Version control
 
