@@ -181,7 +181,7 @@ org-mode headings.
   (setq org-fontify-whole-heading-line t)
 #+END_SRC
 
-** TODO Toggle between light and dark
+** Toggle between light and dark
 I want to be able to toggle between light and dark mode (when contrast is needed).
 
 #+BEGIN_SRC emacs-lisp
@@ -352,6 +352,16 @@ The feedback when visiting a version controlled file is nice.
     :config (add-hook 'find-file-hook (lambda () (diff-hl-mode t))))
 #+END_SRC
 
+** Git timemachine
+
+:o Sounds great, let's try this out!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package git-timemachine
+    :ensure t
+    :bind ("M-G" . git-timemachine))
+#+END_SRC
+
 * Programming
 
 ** C#
@@ -413,6 +423,11 @@ and org-mode might be the tool that'll save me.
 - Emacs Rocks
 - (or emacs
 - emacs-fu
+- (think)
+- sachachua
+- emacs redux
+- endless parentheses
+- lunarsite
 - blog by mwfogleman
 - /r/emacs, /r/fsharp and /r/programmerhumor?
 - scott hanselman
