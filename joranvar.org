@@ -336,10 +336,15 @@ not (yet) work in the windows host, so we don't load it there.
   (use-package magit
     :ensure t
     :bind ("M-g" . magit-status)
-    :config (use-package magit-gitflow
-              :if (eq system-type 'gnu/linux)
-              :ensure t
-              :config (add-hook 'magit-mode-hook #'turn-on-magit-gitflow)))
+    :config
+    (progn
+      (use-package magit-gitflow
+        :if (eq system-type 'gnu/linux)
+        :ensure t
+        :config (add-hook 'magit-mode-hook #'turn-on-magit-gitflow))
+      (use-package magit-filenotify
+        :ensure t
+        :config (add-hook 'magit-status-mode-hook #'magit-filenotify-mode))))
 #+END_SRC
 
 ** Diff highlighting
