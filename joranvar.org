@@ -204,6 +204,26 @@ This goes a long way!
   (setq org-src-fontify-natively t)
 #+END_SRC
 
+* Email
+
+Gnus should be a nice mail reader, so I'm gonna try and use it for my
+work mails when at work.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package gnus
+    :ensure t
+    :config
+    (progn
+      (add-to-list
+       'gnus-secondary-select-methods
+       '(nnimap "cgm"
+                (nnimap-address "127.0.0.1")
+                (nnimap-server-port 1143)
+                (nnimap-stream network)
+                (nnir-search-engine imap)
+                (nnimap-authinfo-file "~/.authinfo.gpg")))))
+#+END_SRC
+
 * Productivity
 
 ** Pomodoro
