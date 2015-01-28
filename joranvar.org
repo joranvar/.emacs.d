@@ -324,7 +324,6 @@ This is a no-brainer.
   (auto-fill-mode t)
 #+END_SRC
 
-
 * Version control
 
 ** Magit
@@ -444,23 +443,28 @@ and org-mode might be the tool that'll save me.
 
 ** Feeds
 
-*** TODO Insert elfeed
-
+#+BEGIN_SRC emacs-lisp
+  (use-package elfeed
+    :ensure t
+    :bind ("C-c e" . elfeed)
+    :config
+    (setq elfeed-feeds
+          '("http://whattheemacsd.com/atom.xml"
+            "http://oremacs.com/atom.xml"
+            "http://emacs-fu.blogspot.com/feeds/posts/default"
+            "http://batsov.com/atom.xml"
+            "http://sachachua.com/blog/feed/"
+            "http://emacsredux.com/atom.xml"
+            "http://endlessparentheses.com/atom.xml"
+            "http://www.lunaryorn.com/feed.atom"
+            "http://mwfogleman.tumblr.com/rss"
+            "http://www.reddit.com/r/emacs.rss"
+            "http://www.reddit.com/r/fsharp.rss"
+            "http://www.reddit.com/r/programmerhumor.rss"
+            "http://feeds.hanselman.com/scotthanselman"
+            "http://blog.cleancoder.com/atom.xml")))
+#+END_SRC
 *** TODO Add xkcd
-
-*** TODO Add the following rss feeds
-- What the .emacs.d
-- Emacs Rocks
-- (or emacs
-- emacs-fu
-- (think)
-- sachachua
-- emacs redux
-- endless parentheses
-- lunarsite
-- blog by mwfogleman
-- /r/emacs, /r/fsharp and /r/programmerhumor?
-- scott hanselman
 
 ** Games
 
