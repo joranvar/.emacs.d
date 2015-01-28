@@ -364,7 +364,8 @@ The feedback when visiting a version controlled file is nice.
 
 * Programming
 
-** C#
+** Languages
+*** C#
 
 C# development is what I do daily for a living. By day I use Visual
 Studio, together with Resharper and NCrunch. Those are very good
@@ -386,6 +387,30 @@ though.
       (define-key omnisharp-mode-map (kbd "M-.") #'omnisharp-auto-complete)
       (define-key omnisharp-mode-map (kbd "M-RET") #'omnisharp-run-code-action-refactoring)
       (define-key omnisharp-mode-map (kbd "<C-return>") #'omnisharp-fix-code-issue-at-point)))
+#+END_SRC
+
+*** F#
+
+F# is one of the functional languages that I'm really interested
+in. Mostly because I feel I can use it at work also.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package fsharp-mode
+    :ensure t)
+#+END_SRC
+
+** Tools
+*** Flycheck
+
+As mentioned before, flycheck could really help me out by giving quick
+feedback on the code that I'm typing (or reading).
+
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init
+    (progn
+      (global-flycheck-mode)))
 #+END_SRC
 
 * Org mode
