@@ -31,7 +31,7 @@ so do I).
       (substitute-in-file-name
        (if (eq system-type 'gnu/linux)
            "$HOME/git_pull/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe"
-         "$HOME\\Source\\Repos\\omnisharp-server\\OmniSharp\\bin\\Debug\\OmniSharp.exe"))
+         "D:\\Ontwikkeling\\omnisharp-server\\OmniSharp\\bin\\Debug\\OmniSharp.exe"))
       "The executable that provides csharp checking.")
 #+END_SRC
 
@@ -181,11 +181,22 @@ org-mode headings.
   (setq org-fontify-whole-heading-line t)
 #+END_SRC
 
-** TODO Toggle between light and dark
+** Toggle between light and dark
 I want to be able to toggle between light and dark mode (when contrast is needed).
 
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c t") (lambda () (interactive) (progn (setq frame-background-mode (if (eq frame-background-mode 'light) 'dark 'light)) (load-theme 'leuven t))))
+  (global-set-key
+   (kbd "C-c t")
+   (lambda () (interactive) (progn
+                         (setq frame-background-mode
+                               (if (eq frame-background-mode 'light)
+                                   'dark
+                                 'light))
+                         (if (eq frame-background-mode 'light)
+                             (progn (disable-theme 'wombat)
+                                    (load-theme 'leuven t))
+                           (progn (disable-theme 'leuven)
+                                  (load-theme 'wombat t))))))
 #+END_SRC
 
 ** Font size
@@ -202,6 +213,14 @@ This goes a long way!
 
 #+BEGIN_SRC emacs-lisp
   (setq org-src-fontify-natively t)
+#+END_SRC
+
+** Pretty symbols
+
+Yummy looking code everywhere!
+
+#+BEGIN_SRC emacs-lisp
+  (global-prettify-symbols-mode t)
 #+END_SRC
 
 * Email
@@ -222,6 +241,18 @@ work mails when at work.
                 (nnimap-stream network)
                 (nnir-search-engine imap)
                 (nnimap-authinfo-file "~/.authinfo.gpg")))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+    (use-package smtpmail
+      :ensure t
+      :config
+      (setq send-mail-function 'smtpmail-send-it
+            smtpmail-default-smtp-server "127.0.0.1"
+            smtpmail-local-domain "cgm.com"
+            smtpmail-stream-type 'network
+            smtpmail-smtp-service 1025
+            smtpmail-auth-credentials "~/.authinfo.gpg"))
 #+END_SRC
 
 * Productivity
@@ -267,7 +298,6 @@ buffer, then C-c C-p to enter wgrep mode.
     :ensure t)
 #+END_SRC
 
-
 ** Projectile
 
 When navigating to a file is as easy as choosing the project name from
@@ -282,6 +312,7 @@ a list, that *does* save a lot of typing.
     :init
     (progn
       (projectile-global-mode)
+      (setq projectile-indexing-method 'alien)
       (setq projectile-enable-caching t)
       (use-package helm-projectile
         :ensure t)
@@ -291,6 +322,39 @@ a list, that *does* save a lot of typing.
                                                (file-directory-p (concat project "/.git/")))
                                              (projectile-relevant-known-projects)))
             magit-repo-dirs-depth 1)))
+#+END_SRC
+
+** Focus-follow-mouse
+
+This is something I really like in any window manager. As emacs does
+consist windows (containing buffers), I really like to use it here,
+too. Although ace-jump-window will complement this (see next item).
+
+#+BEGIN_SRC emacs-lisp
+  (setq mouse-autoselect-window t)
+#+END_SRC
+
+** Ace-jump-mode
+
+This is a powerful "go where I'm looking at now" mode. Type "M-o", the
+first char of the word you're looking at, and the letter that then
+overlays it. BAM, you're there. Thanks to [[https://www.youtube.com/watch?feature=player_embedded&v=UZkpmegySnc#!][emacs rocks!]] for pointing
+this out!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-jump-mode
+    :ensure t
+    :bind (("M-o" . ace-jump-mode)
+           ("M-O" . ace-jump-mode-pop-mark))
+    :config (ace-jump-mode-enable-mark-sync))
+#+END_SRC
+
+** Auto-fill-mode
+
+This is a no-brainer.
+
+#+BEGIN_SRC emacs-lisp
+  (auto-fill-mode t)
 #+END_SRC
 
 * Version control
@@ -318,6 +382,16 @@ The feedback when visiting a version controlled file is nice.
   (use-package diff-hl
     :ensure t
     :config (add-hook 'find-file-hook (lambda () (diff-hl-mode t))))
+#+END_SRC
+
+** Git timemachine
+
+:o Sounds great, let's try this out!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package git-timemachine
+    :ensure t
+    :bind ("M-G" . git-timemachine))
 #+END_SRC
 
 * Programming
@@ -381,6 +455,11 @@ and org-mode might be the tool that'll save me.
 - Emacs Rocks
 - (or emacs
 - emacs-fu
+- (think)
+- sachachua
+- emacs redux
+- endless parentheses
+- lunarsite
 - blog by mwfogleman
 - /r/emacs, /r/fsharp and /r/programmerhumor?
 - scott hanselman

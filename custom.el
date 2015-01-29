@@ -7,7 +7,8 @@
  '(haskell-font-lock-symbols (quote unicode))
  '(helm-github-stars-username "joranvar")
  '(omnisharp-imenu-support t)
- '(paradox-automatically-star t))
+ '(paradox-automatically-star t)
+ '(send-mail-function (quote smtpmail-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
