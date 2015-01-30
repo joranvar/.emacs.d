@@ -228,20 +228,41 @@ Yummy looking code everywhere!
 Gnus should be a nice mail reader, so I'm gonna try and use it for my
 work mails when at work.
 
+** Gnus
+
 #+BEGIN_SRC emacs-lisp
-  (use-package gnus
-    :ensure t
-    :config
-    (progn
-      (add-to-list
-       'gnus-secondary-select-methods
-       '(nnimap "cgm"
-                (nnimap-address "127.0.0.1")
-                (nnimap-server-port 1143)
-                (nnimap-stream network)
-                (nnir-search-engine imap)
-                (nnimap-authinfo-file "~/.authinfo.gpg")))))
+    (use-package gnus
+      :ensure t
+      :config
+      (progn
 #+END_SRC
+
+*** Incoming mail at work
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list
+   'gnus-secondary-select-methods
+   '(nnimap "cgm"
+            (nnimap-address "127.0.0.1")
+            (nnimap-server-port 1143)
+            (nnimap-stream network)
+            (nnir-search-engine imap)
+            (nnimap-authinfo-file "~/.authinfo.gpg")))
+#+END_SRC
+
+*** Display of the summary buffer
+
+#+BEGIN_SRC emacs-lisp
+  (setq gnus-summary-line-format "%U%R%z%I%(%[%4L: %-23,23f%]%) %o %s\n")
+#+END_SRC
+
+*** End of gnus config
+
+#+BEGIN_SRC emacs-lisp
+  ))
+#+END_SRC
+
+*** Outgoing mail at work
 
 #+BEGIN_SRC emacs-lisp
     (use-package smtpmail
@@ -375,6 +396,7 @@ not (yet) work in the windows host, so we don't load it there.
         :ensure t
         :config (add-hook 'magit-mode-hook #'turn-on-magit-gitflow))
       (use-package magit-filenotify
+        :if (eq system-type 'gnu/linux)
         :ensure t
         :config (add-hook 'magit-status-mode-hook #'magit-filenotify-mode))))
 #+END_SRC
