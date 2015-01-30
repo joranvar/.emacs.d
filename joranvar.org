@@ -334,9 +334,11 @@ a list, that *does* save a lot of typing.
     (progn
       (projectile-global-mode)
       (setq projectile-indexing-method 'alien)
+      (setq projectile-completion-system 'helm)
       (setq projectile-enable-caching t)
       (use-package helm-projectile
-        :ensure t)
+        :ensure t
+        :config (helm-projectile-on))
       (setq magit-repo-dirs (mapcar (lambda (dir)
                                       (substring dir 0 -1))
                                     (-filter (lambda (project)
