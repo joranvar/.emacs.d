@@ -475,6 +475,19 @@ feedback on the code that I'm typing (or reading).
       (global-flycheck-mode)))
 #+END_SRC
 
+*** Symbol highlighting
+
+This helps see various occurrances of the symbol at point easily in
+the current buffer.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package highlight-symbol
+    :ensure t
+    :config
+    (progn
+      (add-hook 'prog-mode-hook #'highlight-symbol-mode)))
+#+END_SRC
+
 * Org mode
 
 Keeping things organized, that's an aspiration I'd like to fulfill,
