@@ -181,6 +181,14 @@ org-mode headings.
   (setq org-fontify-whole-heading-line t)
 #+END_SRC
 
+For dark mode, tango-2 seems best suited.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package tango-2-theme
+    :ensure t
+    :defer t)
+#+END_SRC
+
 ** Toggle between light and dark
 I want to be able to toggle between light and dark mode (when contrast is needed).
 
@@ -193,10 +201,10 @@ I want to be able to toggle between light and dark mode (when contrast is needed
                                    'dark
                                  'light))
                          (if (eq frame-background-mode 'light)
-                             (progn (disable-theme 'wombat)
+                             (progn (disable-theme 'tango-2)
                                     (load-theme 'leuven t))
                            (progn (disable-theme 'leuven)
-                                  (load-theme 'wombat t))))))
+                                  (load-theme 'tango-2 t))))))
 #+END_SRC
 
 ** Font size
