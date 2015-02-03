@@ -8,7 +8,9 @@
  '(helm-github-stars-username "joranvar")
  '(omnisharp-imenu-support t)
  '(paradox-automatically-star t)
- '(send-mail-function (quote smtpmail-send-it)))
+ '(send-mail-function (quote smtpmail-send-it))
+ '(smtpmail-smtp-server "127.0.0.1")
+ '(smtpmail-smtp-service 1025))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
