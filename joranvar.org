@@ -399,6 +399,27 @@ This is a no-brainer.
   (auto-fill-mode t)
 #+END_SRC
 
+** Auto-insert and yasnippet
+
+Based on something I found on [[http://www.emacswiki.org/emacs/AutoInsertMode][emacswiki.org]]:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package autoinsert
+    :ensure t
+    :config (progn
+              (defun my/autoinsert-yas-expand()
+                "Replace text in yasnippet template."
+                (yas/expand-snippet (buffer-string) (point-min) (point-max)))
+
+              (setq auto-insert t
+                    auto-insert-directory (substitute-in-file-name "$HOME/Documents/autoinsert"))
+
+              (--each (directory-files auto-insert-directory t)
+                (define-auto-insert (file-name-extension it) it))))
+#+END_SRC
+
+
+
 * Version control
 
 ** Magit
