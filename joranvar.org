@@ -520,10 +520,11 @@ and org-mode might be the tool that'll save me.
     :bind ("C-c a" . org-agenda)
     :config
     (progn
-      (dolist (orgfile (directory-files joranvar/org-directory t "\\w+\\.org" t))
+      (dolist (orgfile (-concat
+                        (directory-files joranvar/org-directory t "\\w+\\.org$" t)
+                        (directory-files (s-concat joranvar/org-directory "/projects") t "\\w+\\.org$" t)))
         (when (file-regular-p orgfile)
           (add-to-list 'org-agenda-files orgfile)))
-      (add-to-list 'org-agenda-files (expand-file-name "joranvar.org" user-emacs-directory))
       (setq org-time-clocksum-format
             '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
       (add-hook 'before-save-hook #'org-update-all-dblocks)
