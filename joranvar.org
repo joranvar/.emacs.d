@@ -450,15 +450,14 @@ initially. The following is based on something I found on
   (use-package autoinsert
     :ensure t
     :config (progn
-              (defun my/autoinsert-yas-expand()
+              (defun joranvar/autoinsert-yas-expand ()
                 "Replace text in yasnippet template."
                 (yas/expand-snippet (buffer-string) (point-min) (point-max)))
-
+              (auto-insert-mode)
               (setq auto-insert t
-                    auto-insert-directory (substitute-in-file-name "$HOME/Documents/autoinsert"))
-
-              (--each (directory-files auto-insert-directory t)
-                (define-auto-insert (file-name-extension it) it))))
+                    auto-insert-directory (substitute-in-file-name "$HOME/Documents/autoinsert/")
+                    auto-insert-alist (--map (cons (s-concat "\\\." (file-name-extension it)) (vector it #'joranvar/autoinsert-yas-expand))
+                                             (directory-files auto-insert-directory t "\\w+\.\\w+$" t)))))
 #+END_SRC
 
 * Version control
