@@ -531,6 +531,15 @@ though.
       (define-key omnisharp-mode-map (kbd "<C-return>") #'omnisharp-fix-code-issue-at-point)))
 #+END_SRC
 
+**** Editing project files
+
+For now, we just set the mode to xml.
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.csproj\\'" . xml-mode))
+  (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
+#+END_SRC
+
 *** F#
 
 F# is one of the functional languages that I'm really interested
