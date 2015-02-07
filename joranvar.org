@@ -298,6 +298,17 @@ me that I need to keep my focus.
                 org-pomodoro-audio-player joranvar/audio-player))
 #+END_SRC
 
+** Kanban
+
+This should visualise what I'm working on in any buffer. As I cannot
+(yet) use the pomodoro tracker sounds above, I still like to have some
+place to watch the stuff.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package kanban
+    :ensure t)
+#+END_SRC
+
 * Less typing
 
 Several packages and settings will help me type less to accomplish the
