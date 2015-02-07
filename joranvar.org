@@ -129,6 +129,33 @@ Functional programming in elisp!
     :ensure t)
 #+END_SRC
 
+** My own tool functions
+
+*** locate-nearest
+
+This function helps find the file with the given regexp nearest to the
+given file. Nearest is: in the same directory or higher.
+
+#+BEGIN_SRC emacs-lisp
+  (defun joranvar/locate-with-subdirs (regex directory)
+    "Find the first file matching REGEX inside DIRECTORY."
+    (progn
+      (--reduce-from
+       (if acc
+           (car (directory-files acc t it))
+         nil)
+       directory
+       (s-split "/" regex))))
+
+  (defun joranvar/locate-nearest (regex origin)
+    "Find the first file matching REGEX nearest to the ORIGIN file."
+    (progn
+      (let ((found (joranvar/locate-with-subdirs regex (file-name-directory origin))))
+        (if found
+            (file-relative-name found (file-name-directory origin))
+          (s-concat "../" (joranvar/locate-nearest regex (s-concat (file-name-directory origin) "../")))))))
+#+END_SRC
+
 * Visual
 
 Beauty is in the eye of the beholder. So let's make emacs
