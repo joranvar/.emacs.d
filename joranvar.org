@@ -120,12 +120,19 @@ Paradox package management is a bit more. Right now I'm trying it out.
       (paradox-enable)))
 #+END_SRC
 
-** Dash
+** Dash and s
 
 Functional programming in elisp!
 
 #+BEGIN_SRC emacs-lisp
   (use-package dash
+    :ensure t)
+#+END_SRC
+
+Extended string manipulation in elisp!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package s
     :ensure t)
 #+END_SRC
 
