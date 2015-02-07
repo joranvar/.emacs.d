@@ -88,7 +88,7 @@ Default is to disable the gpg-agent.
 #+END_SRC
 
 * Utils
-
+  
 ** Get the latest use-package and continue from there
 
 #+BEGIN_SRC emacs-lisp
