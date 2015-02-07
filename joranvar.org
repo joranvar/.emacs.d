@@ -427,8 +427,6 @@ initially. The following is based on something I found on
                 (define-auto-insert (file-name-extension it) it))))
 #+END_SRC
 
-
-
 * Version control
 
 ** Magit
@@ -613,4 +611,14 @@ direction of the delete action.
   (use-package hungry-delete
     :ensure t
     :init (global-hungry-delete-mode))
+#+END_SRC
+
+** visual-regexp
+
+See what's going to be replaced!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package visual-regexp
+    :ensure t
+    :bind ("M-s r" . vr/replace))
 #+END_SRC
