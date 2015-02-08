@@ -550,6 +550,14 @@ For now, we just set the mode to xml.
   (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
 #+END_SRC
 
+**** Editing solution files
+
+For now, we just include [[https://github.com/sensorflo/sln-mode][sensorflo]]s sln-mode.
+
+#+BEGIN_SRC emacs-lisp
+  ;;(require 'sln-mode)
+#+END_SRC
+
 *** F#
 
 F# is one of the functional languages that I'm really interested
