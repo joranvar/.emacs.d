@@ -88,7 +88,17 @@ Default is to disable the gpg-agent.
 #+END_SRC
 
 * Utils
-  
+
+** Set up local packages
+
+#+BEGIN_SRC emacs-lisp
+  (setq site-lisp-dir (expand-file-name "site-lisp" user-emacs-directory))
+  (add-to-list 'load-path site-lisp-dir)
+  (dolist (project (directory-files site-lisp-dir t "\\w+"))
+    (when (file-directory-p project)
+      (add-to-list 'load-path project)))
+#+END_SRC
+   
 ** Get the latest use-package and continue from there
 
 #+BEGIN_SRC emacs-lisp
