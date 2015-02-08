@@ -430,7 +430,7 @@ this out!
 This is a no-brainer.
 
 #+BEGIN_SRC emacs-lisp
-  (auto-fill-mode t)
+  (add-hook 'text-mode-hook #'auto-fill-mode)
 #+END_SRC
 
 ** Auto-insert and yasnippet
