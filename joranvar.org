@@ -568,7 +568,7 @@ For now, we just set the mode to xml.
 For now, we just include [[https://github.com/sensorflo/sln-mode][sensorflo]]s sln-mode.
 
 #+BEGIN_SRC emacs-lisp
-  ;;(require 'sln-mode)
+  (require 'sln-mode)
 #+END_SRC
 
 *** F#
