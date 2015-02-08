@@ -569,6 +569,7 @@ For now, we just include [[https://github.com/sensorflo/sln-mode][sensorflo]]s s
 
 #+BEGIN_SRC emacs-lisp
   (require 'sln-mode)
+  (add-to-list 'auto-mode-alist '("\\.sln\\'" . sln-mode))
 #+END_SRC
 
 *** F#
