@@ -582,6 +582,19 @@ in. Mostly because I feel I can use it at work also.
     :ensure t)
 #+END_SRC
 
+*** Emacs lisp
+
+Smart parens are the way to go, apparently. Let's do this!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package smartparens
+    :ensure t
+    :config
+    (require 'smartparens-config)
+    (smartparens-global-strict-mode)
+    (show-smartparens-global-mode))
+#+END_SRC
+
 ** Tools
 *** Flycheck
 
