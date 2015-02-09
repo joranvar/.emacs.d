@@ -89,6 +89,16 @@ Default is to disable the gpg-agent.
 
 * Utils
 
+** Set up local packages
+
+#+BEGIN_SRC emacs-lisp
+  (setq site-lisp-dir (expand-file-name "site-lisp" user-emacs-directory))
+  (add-to-list 'load-path site-lisp-dir)
+  (dolist (project (directory-files site-lisp-dir t "\\w+"))
+    (when (file-directory-p project)
+      (add-to-list 'load-path project)))
+#+END_SRC
+   
 ** Get the latest use-package and continue from there
 
 #+BEGIN_SRC emacs-lisp
@@ -120,13 +130,47 @@ Paradox package management is a bit more. Right now I'm trying it out.
       (paradox-enable)))
 #+END_SRC
 
-** Dash
+** Dash and s
 
 Functional programming in elisp!
 
 #+BEGIN_SRC emacs-lisp
   (use-package dash
     :ensure t)
+#+END_SRC
+
+Extended string manipulation in elisp!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package s
+    :ensure t)
+#+END_SRC
+
+** My own tool functions
+
+*** locate-nearest
+
+This function helps find the file with the given regexp nearest to the
+given file. Nearest is: in the same directory or higher.
+
+#+BEGIN_SRC emacs-lisp
+  (defun joranvar/locate-with-subdirs (regex directory)
+    "Find the first file matching REGEX inside DIRECTORY."
+    (progn
+      (--reduce-from
+       (if acc
+           (car (directory-files acc t it))
+         nil)
+       directory
+       (s-split "/" regex))))
+
+  (defun joranvar/locate-nearest (regex origin)
+    "Find the first file matching REGEX nearest to the ORIGIN file."
+    (progn
+      (let ((found (joranvar/locate-with-subdirs regex (file-name-directory origin))))
+        (if found
+            (file-relative-name found (file-name-directory origin))
+          (s-concat "../" (joranvar/locate-nearest regex (s-concat (file-name-directory origin) "../")))))))
 #+END_SRC
 
 * Visual
@@ -298,6 +342,17 @@ me that I need to keep my focus.
                 org-pomodoro-audio-player joranvar/audio-player))
 #+END_SRC
 
+** Kanban
+
+This should visualise what I'm working on in any buffer. As I cannot
+(yet) use the pomodoro tracker sounds above, I still like to have some
+place to watch the stuff.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package kanban
+    :ensure t)
+#+END_SRC
+
 * Less typing
 
 Several packages and settings will help me type less to accomplish the
@@ -385,7 +440,34 @@ this out!
 This is a no-brainer.
 
 #+BEGIN_SRC emacs-lisp
-  (auto-fill-mode t)
+  (add-hook 'text-mode-hook #'auto-fill-mode)
+#+END_SRC
+
+** Auto-insert and yasnippet
+
+Yasnippet is a template expansion tool.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t)
+#+END_SRC
+
+With yasnippet, I can also create files with some default content
+initially. The following is based on something I found on
+[[http://www.emacswiki.org/emacs/AutoInsertMode][emacswiki.org]]:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package autoinsert
+    :ensure t
+    :config (progn
+              (defun joranvar/autoinsert-yas-expand ()
+                "Replace text in yasnippet template."
+                (yas/expand-snippet (buffer-string) (point-min) (point-max)))
+              (auto-insert-mode)
+              (setq auto-insert t
+                    auto-insert-directory (substitute-in-file-name "$HOME/Documents/autoinsert/")
+                    auto-insert-alist (--map (cons (s-concat "\\\." (file-name-extension it)) (vector it #'joranvar/autoinsert-yas-expand))
+                                             (directory-files auto-insert-directory t "\\w+\.\\w+$" t)))))
 #+END_SRC
 
 * Version control
@@ -459,6 +541,23 @@ though.
       (define-key omnisharp-mode-map (kbd "<C-return>") #'omnisharp-fix-code-issue-at-point)))
 #+END_SRC
 
+**** Editing project files
+
+For now, we just set the mode to xml.
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.csproj\\'" . xml-mode))
+  (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
+#+END_SRC
+
+**** Editing solution files
+
+For now, we just include [[https://github.com/sensorflo/sln-mode][sensorflo]]s sln-mode.
+
+#+BEGIN_SRC emacs-lisp
+  ;;(require 'sln-mode)
+#+END_SRC
+
 *** F#
 
 F# is one of the functional languages that I'm really interested
@@ -509,12 +608,19 @@ and org-mode might be the tool that'll save me.
     :bind ("C-c a" . org-agenda)
     :config
     (progn
-      (dolist (orgfile (directory-files joranvar/org-directory t "\\w+\\.org" t))
+      (dolist (orgfile (-concat
+                        (directory-files joranvar/org-directory t "\\w+\\.org$" t)
+                        (directory-files (s-concat joranvar/org-directory "/projects") t "\\w+\\.org$" t)))
         (when (file-regular-p orgfile)
           (add-to-list 'org-agenda-files orgfile)))
-      (add-to-list 'org-agenda-files (expand-file-name "joranvar.org" user-emacs-directory))
       (setq org-time-clocksum-format
             '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
+      (add-hook 'before-save-hook #'org-update-all-dblocks)
+      (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
+
+      ;; Workaround for a compatibility issue with the newest emacs from github?
+      (defun org-font-lock-ensure ()
+        (font-lock-fontify-buffer))
       ))
 #+END_SRC
 
@@ -565,4 +671,14 @@ direction of the delete action.
   (use-package hungry-delete
     :ensure t
     :init (global-hungry-delete-mode))
+#+END_SRC
+
+** visual-regexp
+
+See what's going to be replaced!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package visual-regexp
+    :ensure t
+    :bind ("M-s r" . vr/replace))
 #+END_SRC
