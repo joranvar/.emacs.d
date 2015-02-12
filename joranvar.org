@@ -8,12 +8,25 @@ Of course, emacs can not (yet) run as a [[http://c2.com/cgi/wiki?EmacsAsOperatin
 system]]. So for certain tasks, it needs to interact with the host (and
 so do I).
 
+** What is my home directory?
+
+substitute-in-file-name seems not to work really well in my Windows
+configuration at the moment, so I will have to resort to this for now.
+
+#+BEGIN_SRC emacs-lisp
+  (defvar joranvar/home
+    (if (eq system-type 'gnu/linux)
+        (substitute-in-file-name "$HOME")
+      "C:/Users/bart.post"))
+#+END_SRC
+
 ** Which sound player to use?
 #+BEGIN_SRC emacs-lisp
   (defvar joranvar/audio-player
     (or (executable-find "aplay") 
         (executable-find "afplay")
-        "c:/Program Files/MPC-HC/mpc-hc64.exe")
+        nil)
+  ;;      "c:/Program Files/MPC-HC/mpc-hc64.exe")
     "The executable that makes sound.")
 #+END_SRC
 
@@ -338,7 +351,7 @@ me that I need to keep my focus.
 #+BEGIN_SRC emacs-lisp
   (use-package org-pomodoro
     :ensure t
-    :init (setq org-pomodoro-play-ticking-sounds t
+    :init (setq org-pomodoro-play-ticking-sounds (and joranvar/audio-player t)
                 org-pomodoro-audio-player joranvar/audio-player))
 #+END_SRC
 
@@ -465,7 +478,7 @@ initially. The following is based on something I found on
                 (yas/expand-snippet (buffer-string) (point-min) (point-max)))
               (auto-insert-mode)
               (setq auto-insert t
-                    auto-insert-directory (substitute-in-file-name "$HOME/Documents/autoinsert/")
+                    auto-insert-directory (concat joranvar/home "/Documents/autoinsert/")
                     auto-insert-alist (--map (cons (s-concat "\\\." (file-name-extension it)) (vector it #'joranvar/autoinsert-yas-expand))
                                              (directory-files auto-insert-directory t "\\w+\.\\w+$" t)))))
 #+END_SRC
@@ -602,8 +615,7 @@ and org-mode might be the tool that'll save me.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
-    :init (defvar joranvar/org-directory (substitute-in-file-name
-                                          "$HOME/Documents/org")
+    :init (defvar joranvar/org-directory (s-concat joranvar/home "/Documents/org")
             "The location of my org files.")
     :bind ("C-c a" . org-agenda)
     :config
@@ -614,7 +626,9 @@ and org-mode might be the tool that'll save me.
         (when (file-regular-p orgfile)
           (add-to-list 'org-agenda-files orgfile)))
       (setq org-time-clocksum-format
-            '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
+            '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)
+            org-clock-into-drawer t
+            org-log-into-drawer t)
       (add-hook 'before-save-hook #'org-update-all-dblocks)
       (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
 
@@ -622,6 +636,17 @@ and org-mode might be the tool that'll save me.
       (defun org-font-lock-ensure ()
         (font-lock-fontify-buffer))
       ))
+#+END_SRC
+
+** Jira integration
+
+I like to use emacs for Jira, too!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-jira
+    :ensure t
+    :config
+    (setq jiralib-url joranvar/jira-server))
 #+END_SRC
 
 * Hobbies
