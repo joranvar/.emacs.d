@@ -8,12 +8,25 @@ Of course, emacs can not (yet) run as a [[http://c2.com/cgi/wiki?EmacsAsOperatin
 system]]. So for certain tasks, it needs to interact with the host (and
 so do I).
 
+** What is my home directory?
+
+substitute-in-file-name seems not to work really well in my Windows
+configuration at the moment, so I will have to resort to this for now.
+
+#+BEGIN_SRC emacs-lisp
+  (defvar joranvar/home
+    (if (eq system-type 'gnu/linux)
+        (substitute-in-file-name "$HOME")
+      "C:/Users/bart.post"))
+#+END_SRC
+
 ** Which sound player to use?
 #+BEGIN_SRC emacs-lisp
   (defvar joranvar/audio-player
     (or (executable-find "aplay") 
         (executable-find "afplay")
-        "c:/Program Files/MPC-HC/mpc-hc64.exe")
+        nil)
+  ;;      "c:/Program Files/MPC-HC/mpc-hc64.exe")
     "The executable that makes sound.")
 #+END_SRC
 
@@ -22,7 +35,17 @@ so do I).
   (defvar joranvar/gpg-location
     (or (executable-find "gpg")
         "c:/Program Files/GNU/GnuPG/pub/gpg.exe")
-    "The executable that makes sound.")
+    "The executable that provides encryption.")
+#+END_SRC
+
+** Where can I find omnisharp?
+#+BEGIN_SRC emacs-lisp
+    (defvar joranvar/omnisharp-path
+      (substitute-in-file-name
+       (if (eq system-type 'gnu/linux)
+           "$HOME/git_pull/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe"
+         "D:\\Ontwikkeling\\omnisharp-server\\OmniSharp\\bin\\Debug\\OmniSharp.exe"))
+      "The executable that provides csharp checking.")
 #+END_SRC
 
 * General settings
@@ -67,10 +90,28 @@ so (thanks [[http://www.enigmacurry.com/2009/01/14/extending-emacs-with-advice/]
     (message "EasyPG gpg-agent re-enabled"))
 #+END_SRC
 
+Default is to disable the gpg-agent.
+
+#+BEGIN_SRC emacs-lisp
+  (epg-disable-agent)
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
   (load (expand-file-name "secrets.el.gpg" user-emacs-directory))
 #+END_SRC
 
+* Utils
+
+** Set up local packages
+
+#+BEGIN_SRC emacs-lisp
+  (setq site-lisp-dir (expand-file-name "site-lisp" user-emacs-directory))
+  (add-to-list 'load-path site-lisp-dir)
+  (dolist (project (directory-files site-lisp-dir t "\\w+"))
+    (when (file-directory-p project)
+      (add-to-list 'load-path project)))
+#+END_SRC
+   
 ** Get the latest use-package and continue from there
 
 #+BEGIN_SRC emacs-lisp
@@ -97,11 +138,212 @@ Paradox package management is a bit more. Right now I'm trying it out.
   (use-package paradox
     :ensure t
     :config
-    (setq paradox-execute-asynchronously t))
+    (progn
+      (setq paradox-execute-asynchronously t)
+      (paradox-enable)))
 #+END_SRC
+
+** Dash and s
+
+Functional programming in elisp!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package dash
+    :ensure t)
+#+END_SRC
+
+Extended string manipulation in elisp!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package s
+    :ensure t)
+#+END_SRC
+
+** My own tool functions
+
+*** locate-nearest
+
+This function helps find the file with the given regexp nearest to the
+given file. Nearest is: in the same directory or higher.
+
+#+BEGIN_SRC emacs-lisp
+  (defun joranvar/locate-with-subdirs (regex directory)
+    "Find the first file matching REGEX inside DIRECTORY."
+    (progn
+      (--reduce-from
+       (if acc
+           (car (directory-files acc t it))
+         nil)
+       directory
+       (s-split "/" regex))))
+
+  (defun joranvar/locate-nearest (regex origin)
+    "Find the first file matching REGEX nearest to the ORIGIN file."
+    (progn
+      (let ((found (joranvar/locate-with-subdirs regex (file-name-directory origin))))
+        (if found
+            (file-relative-name found (file-name-directory origin))
+          (s-concat "../" (joranvar/locate-nearest regex (s-concat (file-name-directory origin) "../")))))))
+#+END_SRC
+
 * Visual
 
+Beauty is in the eye of the beholder. So let's make emacs
+aesthetically pleasing.
+
+** Get rid of the bars
+
+I don't like to use the mouse, and I don't need the bars that take up
+screen real estate. Make them go away.
+
+#+BEGIN_SRC emacs-lisp
+  (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+  (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+#+END_SRC
+
+** Diminish some minor modes
+
+#+BEGIN_QUOTE
+"When we diminish a mode, we are saying we want it to continue doing
+its work for us, but we no longer want to be reminded of it. It
+becomes a night worker, like a janitor; it becomes an invisible man;
+it remains a component, perhaps an important one, sometimes an
+indispensable one, of the mechanism that maintains the day-people's
+world, but its place in their thoughts is diminished, usually to
+nothing. As we grow old we diminish more and more such thoughts, such
+people, usually to nothing."
+#+END_QUOTE
+
+- Will Mengarini in [[http://www.eskimo.com/~seldon/diminish.el][diminish.el]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package diminish
+    :ensure t)
+#+END_SRC
+
+** Choose a theme
+
+I used to have solarized, but I'm gonna try [[https://github.com/fniessen/emacs-leuven-theme][Leuven-theme]] for a
+while. It works great with org-mode.
+
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'leuven t)
+#+END_SRC
+
+I also want the whole line to be fontified (background color) in
+org-mode headings.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-fontify-whole-heading-line t)
+#+END_SRC
+
+For dark mode, tango-2 seems best suited.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package tango-2-theme
+    :ensure t
+    :defer t)
+#+END_SRC
+
+** Toggle between light and dark
+I want to be able to toggle between light and dark mode (when contrast is needed).
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key
+   (kbd "C-c t")
+   (lambda () (interactive) (progn
+                         (setq frame-background-mode
+                               (if (eq frame-background-mode 'light)
+                                   'dark
+                                 'light))
+                         (if (eq frame-background-mode 'light)
+                             (progn (disable-theme 'tango-2)
+                                    (load-theme 'leuven t))
+                           (progn (disable-theme 'leuven)
+                                  (load-theme 'tango-2 t))))))
+#+END_SRC
+
+** Font size
+
+Set a smaller font size. More text on the screen is better.
+
+#+BEGIN_SRC emacs-lisp
+  (set-face-attribute 'default nil :height (if (eq system-type 'gnu/linux) 100 90))
+#+END_SRC
+
+** Fontify in org-mode
+
+This goes a long way!
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-fontify-natively t)
+#+END_SRC
+
+** Pretty symbols
+
+Yummy looking code everywhere!
+
+#+BEGIN_SRC emacs-lisp
+  (global-prettify-symbols-mode t)
+#+END_SRC
+
+* Email
+
+Gnus should be a nice mail reader, so I'm gonna try and use it for my
+work mails when at work.
+
+** Gnus
+
+#+BEGIN_SRC emacs-lisp
+    (use-package gnus
+      :ensure t
+      :config
+      (progn
+#+END_SRC
+
+*** Incoming mail at work
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list
+   'gnus-secondary-select-methods
+   '(nnimap "cgm"
+            (nnimap-address "127.0.0.1")
+            (nnimap-server-port 1143)
+            (nnimap-stream network)
+            (nnir-search-engine imap)
+            (nnimap-authinfo-file "~/.authinfo.gpg")))
+#+END_SRC
+
+*** Display of the summary buffer
+
+#+BEGIN_SRC emacs-lisp
+  (setq gnus-summary-line-format "%U%R%z%I%(%[%4L: %-23,23f%]%) %o %s\n")
+#+END_SRC
+
+*** End of gnus config
+
+#+BEGIN_SRC emacs-lisp
+  ))
+#+END_SRC
+
+*** Outgoing mail at work
+
+#+BEGIN_SRC emacs-lisp
+    (use-package smtpmail
+      :ensure t
+      :config
+      (setq send-mail-function 'smtpmail-send-it
+            smtpmail-default-smtp-server "127.0.0.1"
+            smtpmail-local-domain "cgm.com"
+            smtpmail-stream-type 'network
+            smtpmail-smtp-service 1025
+            smtpmail-auth-credentials "~/.authinfo.gpg"))
+#+END_SRC
+
 * Productivity
+
+** Pomodoro
 
 I like to work with the pomodoro technique. The ticking sound reminds
 me that I need to keep my focus.
@@ -109,9 +351,351 @@ me that I need to keep my focus.
 #+BEGIN_SRC emacs-lisp
   (use-package org-pomodoro
     :ensure t
-    :init (setq org-pomodoro-play-ticking-sounds t
+    :init (setq org-pomodoro-play-ticking-sounds (and joranvar/audio-player t)
                 org-pomodoro-audio-player joranvar/audio-player))
 #+END_SRC
+
+** Kanban
+
+This should visualise what I'm working on in any buffer. As I cannot
+(yet) use the pomodoro tracker sounds above, I still like to have some
+place to watch the stuff.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package kanban
+    :ensure t)
+#+END_SRC
+
+* Less typing
+
+Several packages and settings will help me type less to accomplish the
+same. The main theme is auto completion (read: helm).
+
+** Helm
+
+Make sure that we have helm, then bind some keys.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-config
+    :ensure helm
+    :init (helm-mode t)
+    :bind (("M-x" . helm-M-x)
+           ("C-x C-f" . helm-find-files)
+           ("C-x b" . helm-buffers-list)))
+#+END_SRC
+
+** Writable grep
+
+Having wgrep makes replace/edit on multiple lines quite nice! Use
+helm-occur to find occurrances, C-x C-s to save to a helm-grep-mode
+buffer, then C-c C-p to enter wgrep mode.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package wgrep
+    :ensure t)
+#+END_SRC
+
+** Projectile
+
+When navigating to a file is as easy as choosing the project name from
+a list, that *does* save a lot of typing.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :bind (("M-p" . helm-projectile-find-file)
+           ("M-P" . helm-projectile-switch-project))
+    :diminish projectile-mode
+    :init
+    (progn
+      (projectile-global-mode)
+      (setq projectile-indexing-method 'alien)
+      (setq projectile-completion-system 'helm)
+      (setq projectile-enable-caching t)
+      (use-package helm-projectile
+        :ensure t
+        :config (helm-projectile-on))
+      (setq magit-repo-dirs (mapcar (lambda (dir)
+                                      (substring dir 0 -1))
+                                    (-filter (lambda (project)
+                                               (file-directory-p (concat project "/.git/")))
+                                             (projectile-relevant-known-projects)))
+            magit-repo-dirs-depth 1)))
+#+END_SRC
+
+** Focus-follow-mouse
+
+This is something I really like in any window manager. As emacs does
+consist windows (containing buffers), I really like to use it here,
+too. Although ace-jump-window will complement this (see next item).
+
+#+BEGIN_SRC emacs-lisp
+  (setq mouse-autoselect-window t)
+#+END_SRC
+
+** Ace-jump-mode
+
+This is a powerful "go where I'm looking at now" mode. Type "M-o", the
+first char of the word you're looking at, and the letter that then
+overlays it. BAM, you're there. Thanks to [[https://www.youtube.com/watch?feature=player_embedded&v=UZkpmegySnc#!][emacs rocks!]] for pointing
+this out!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-jump-mode
+    :ensure t
+    :bind (("M-o" . ace-jump-mode)
+           ("M-O" . ace-jump-mode-pop-mark))
+    :config (ace-jump-mode-enable-mark-sync))
+#+END_SRC
+
+** Auto-fill-mode
+
+This is a no-brainer.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'text-mode-hook #'auto-fill-mode)
+#+END_SRC
+
+** Auto-insert and yasnippet
+
+Yasnippet is a template expansion tool.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t)
+#+END_SRC
+
+With yasnippet, I can also create files with some default content
+initially. The following is based on something I found on
+[[http://www.emacswiki.org/emacs/AutoInsertMode][emacswiki.org]]:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package autoinsert
+    :ensure t
+    :config (progn
+              (defun joranvar/autoinsert-yas-expand ()
+                "Replace text in yasnippet template."
+                (yas/expand-snippet (buffer-string) (point-min) (point-max)))
+              (auto-insert-mode)
+              (setq auto-insert t
+                    auto-insert-directory (concat joranvar/home "/Documents/autoinsert/")
+                    auto-insert-alist (--map (cons (s-concat "\\\." (file-name-extension it)) (vector it #'joranvar/autoinsert-yas-expand))
+                                             (directory-files auto-insert-directory t "\\w+\.\\w+$" t)))))
+#+END_SRC
+
+* Version control
+
+** Magit
+
+Of course, the most beautiful git client of them all. Git-flow does
+not (yet) work in the windows host, so we don't load it there.
+
+#+BEGIN_SRC emacs-lisp
+    (use-package magit
+      :ensure t
+      :bind ("M-g" . magit-status)
+      :config
+      (progn
+        (use-package magit-gitflow
+          :if (eq system-type 'gnu/linux)
+          :ensure t
+          :config (add-hook 'magit-mode-hook #'turn-on-magit-gitflow))
+        (use-package magit-filenotify
+          :if (eq system-type 'gnu/linux)
+          :ensure t
+          :config (add-hook 'magit-status-mode-hook #'magit-filenotify-mode)))
+      (add-to-list 'magit-repo-dirs (expand-file-name "~/git_pull/")))
+#+END_SRC
+
+** Diff highlighting
+
+The feedback when visiting a version controlled file is nice.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package diff-hl
+    :ensure t
+    :config (add-hook 'find-file-hook (lambda () (diff-hl-mode t))))
+#+END_SRC
+
+** Git timemachine
+
+:o Sounds great, let's try this out!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package git-timemachine
+    :ensure t
+    :bind ("M-G" . git-timemachine))
+#+END_SRC
+
+* Programming
+
+** Languages
+*** C#
+
+C# development is what I do daily for a living. By day I use Visual
+Studio, together with Resharper and NCrunch. Those are very good
+tools, but I do miss the comfort of my own, personalized OS when I am
+using them. But when I return to emacs, I miss the refactoring tools
+and automatic testing and feedback that I have grown accustomed to.
+
+Omnisharp and flycheck are two tools that may help me out here. I am
+still hoping to find some bridge between flycheck and nunit/xunit,
+though.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package omnisharp
+    :ensure t
+    :config
+    (progn
+      (add-hook 'csharp-mode-hook #'omnisharp-mode)
+      (setq omnisharp-server-executable-path joranvar/omnisharp-path)
+      (define-key omnisharp-mode-map (kbd "M-.") #'omnisharp-auto-complete)
+      (define-key omnisharp-mode-map (kbd "M-RET") #'omnisharp-run-code-action-refactoring)
+      (define-key omnisharp-mode-map (kbd "<C-return>") #'omnisharp-fix-code-issue-at-point)))
+#+END_SRC
+
+**** Editing project files
+
+For now, we just set the mode to xml.
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.csproj\\'" . xml-mode))
+  (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
+#+END_SRC
+
+**** Editing solution files
+
+For now, we just include [[https://github.com/sensorflo/sln-mode][sensorflo]]s sln-mode.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'sln-mode)
+  (add-to-list 'auto-mode-alist '("\\.sln\\'" . sln-mode))
+#+END_SRC
+
+*** F#
+
+F# is one of the functional languages that I'm really interested
+in. Mostly because I feel I can use it at work also.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package fsharp-mode
+    :ensure t)
+#+END_SRC
+
+*** Emacs lisp
+
+Smart parens are the way to go, apparently. Let's do this!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package smartparens
+    :ensure t
+    :config
+    (require 'smartparens-config)
+    (smartparens-global-strict-mode)
+    (show-smartparens-global-mode))
+#+END_SRC
+
+** Tools
+*** Flycheck
+
+As mentioned before, flycheck could really help me out by giving quick
+feedback on the code that I'm typing (or reading).
+
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init
+    (progn
+      (global-flycheck-mode)))
+#+END_SRC
+
+*** Symbol highlighting
+
+This helps see various occurrances of the symbol at point easily in
+the current buffer.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package highlight-symbol
+    :ensure t
+    :config
+    (progn
+      (add-hook 'prog-mode-hook #'highlight-symbol-mode)))
+#+END_SRC
+
+* Org mode
+
+Keeping things organized, that's an aspiration I'd like to fulfill,
+and org-mode might be the tool that'll save me.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :init (defvar joranvar/org-directory (s-concat joranvar/home "/Documents/org")
+            "The location of my org files.")
+    :bind ("C-c a" . org-agenda)
+    :config
+    (progn
+      (dolist (orgfile (-concat
+                        (directory-files joranvar/org-directory t "\\w+\\.org$" t)
+                        (directory-files (s-concat joranvar/org-directory "/projects") t "\\w+\\.org$" t)))
+        (when (file-regular-p orgfile)
+          (add-to-list 'org-agenda-files orgfile)))
+      (setq org-time-clocksum-format
+            '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)
+            org-clock-into-drawer t
+            org-log-into-drawer t)
+      (add-hook 'before-save-hook #'org-update-all-dblocks)
+      (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
+
+      ;; Workaround for a compatibility issue with the newest emacs from github?
+      (defun org-font-lock-ensure ()
+        (font-lock-fontify-buffer))
+      ))
+#+END_SRC
+
+** Jira integration
+
+I like to use emacs for Jira, too!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-jira
+    :ensure t
+    :config
+    (setq jiralib-url joranvar/jira-server
+          org-jira-default-jql "sprint in openSprints() AND component = \"Team Platform\" order by priority desc, created asc"))
+#+END_SRC
+
+* Hobbies
+
+** Feeds
+
+#+BEGIN_SRC emacs-lisp
+  (use-package elfeed
+    :ensure t
+    :bind ("C-c e" . elfeed)
+    :config
+    (setq elfeed-feeds
+          '("http://whattheemacsd.com/atom.xml"
+            "http://oremacs.com/atom.xml"
+            "http://emacs-fu.blogspot.com/feeds/posts/default"
+            "http://batsov.com/atom.xml"
+            "http://sachachua.com/blog/feed/"
+            "http://emacsredux.com/atom.xml"
+            "http://endlessparentheses.com/atom.xml"
+            "http://www.lunaryorn.com/feed.atom"
+            "http://mwfogleman.tumblr.com/rss"
+            "http://www.reddit.com/r/emacs.rss"
+            "http://www.reddit.com/r/fsharp.rss"
+            "http://www.reddit.com/r/programmerhumor.rss"
+            "http://feeds.hanselman.com/scotthanselman"
+            "http://blog.cleancoder.com/atom.xml")))
+#+END_SRC
+*** TODO Add xkcd
+
+** Games
+
+*** TODO Add steam
+
+*** TODO Add LoL?
 
 * Editing
 
@@ -127,4 +711,14 @@ direction of the delete action.
   (use-package hungry-delete
     :ensure t
     :init (global-hungry-delete-mode))
+#+END_SRC
+
+** visual-regexp
+
+See what's going to be replaced!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package visual-regexp
+    :ensure t
+    :bind ("M-s r" . vr/replace))
 #+END_SRC

@@ -4,3 +4,6 @@
 [submodule "site-lisp/steam.el"]
 	path = site-lisp/steam.el
 	url = https://github.com/Kungsgeten/steam.el
+[submodule "site-lisp/sln-mode"]
+	path = site-lisp/sln-mode
+	url = git@github.com:joranvar/sln-mode.git
