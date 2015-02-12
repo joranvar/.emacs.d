@@ -646,7 +646,8 @@ I like to use emacs for Jira, too!
   (use-package org-jira
     :ensure t
     :config
-    (setq jiralib-url joranvar/jira-server))
+    (setq jiralib-url joranvar/jira-server
+          org-jira-default-jql "sprint in openSprints() AND component = \"Team Platform\" order by priority desc, created asc"))
 #+END_SRC
 
 * Hobbies
