@@ -5,6 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(flycheck-csharp-omnisharp-curl-executable "curl")
  '(haskell-font-lock-symbols (quote unicode))
+ '(helm-external-programs-associations (quote (("sln" . "explorer.exe"))))
  '(helm-github-stars-username "joranvar")
  '(omnisharp-imenu-support t)
  '(paradox-automatically-star t)
