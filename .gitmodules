@@ -7,3 +7,6 @@
 [submodule "site-lisp/sln-mode"]
 	path = site-lisp/sln-mode
 	url = git@github.com:joranvar/sln-mode.git
+[submodule "site-lisp/org-jira"]
+	path = site-lisp/org-jira
+	url = git@github.com:joranvar/org-jira.git
