@@ -596,6 +596,13 @@ in. Mostly because I feel I can use it at work also.
     :ensure t)
 #+END_SRC
 
+*** Emacs lisp
+
+Most importantly: do not use tabs.
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+#+END_SRC
 
 ** Tools
 *** Flycheck
