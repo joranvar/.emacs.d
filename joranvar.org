@@ -488,23 +488,13 @@ initially. The following is based on something I found on
 Smart parens are the way to go, apparently. Let's do this!
 
 #+BEGIN_SRC emacs-lisp
-  (use-package smartparens
-    :ensure t
-    :bind (("C-<right>" . sp-forward-slurp-sexp)
-           ("C-<left>" . sp-forward-barf-sexp)
-           ("C-M-<left>" . sp-backward-slurp-sexp)
-           ("C-M-<right>" . sp-backward-barf-sexp)
-
-           ("C-M-k" . sp-kill-sexp)
-           ("C-M-w" . sp-copy-sexp)
-
-           ;; replace emacs defaults
-           ("C-M-f" . sp-forward-sexp)
-           ("C-M-b" . sp-backward-sexp))
-    :config
-    (require 'smartparens-config)
-    (smartparens-global-strict-mode)
-    (show-smartparens-global-mode))
+    (use-package smartparens
+      :ensure t
+      :config
+      (require 'smartparens-config)
+      (smartparens-global-strict-mode)
+      (sp-use-smartparens-bindings)
+      (show-smartparens-global-mode))
 #+END_SRC
 
 * Version control
