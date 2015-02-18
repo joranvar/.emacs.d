@@ -304,15 +304,14 @@ work mails when at work.
 
 *** Incoming mail at work
 
+I used to poll through davmail directly, but now I'm trying the
+offlineimap way, and have everything sent to my inbox locally.
+
 #+BEGIN_SRC emacs-lisp
-  (add-to-list
-   'gnus-secondary-select-methods
-   '(nnimap "cgm"
-            (nnimap-address "127.0.0.1")
-            (nnimap-server-port 1143)
-            (nnimap-stream network)
-            (nnir-search-engine imap)
-            (nnimap-authinfo-file "~/.authinfo.gpg")))
+  (setq gnus-select-method '(nnmaildir "cgm"
+                                       (get-new-mail ())
+                                       (target-prefix "")
+                                       (directory "~/ProgramData/CGM-Mail/")))
 #+END_SRC
 
 *** Display of the summary buffer
