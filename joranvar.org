@@ -704,6 +704,16 @@ I like to use emacs for Jira, too!
 
 *** TODO Add LoL?
 
+* Web browsing
+
+I use wee, now I have a nice recent build. The default search engine
+out of the box is duckduckgo, but I still prefer google, as it always
+brings me what I am looking for.
+
+#+BEGIN_SRC emacs-lisp
+  (setq eww-search-prefix "https://www.google.com/search?q=")
+#+END_SRC
+
 * Editing
 
 Gee, there's also a section for configuring the text editing part of
