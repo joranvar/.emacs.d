@@ -23,7 +23,7 @@ configuration at the moment, so I will have to resort to this for now.
 ** Which sound player to use?
 #+BEGIN_SRC emacs-lisp
   (defvar joranvar/audio-player
-    (or (executable-find "aplay") 
+    (or (executable-find "aplay")
         (executable-find "afplay")
         nil)
   ;;      "c:/Program Files/MPC-HC/mpc-hc64.exe")
@@ -111,7 +111,7 @@ Default is to disable the gpg-agent.
     (when (file-directory-p project)
       (add-to-list 'load-path project)))
 #+END_SRC
-   
+
 ** Get the latest use-package and continue from there
 
 #+BEGIN_SRC emacs-lisp
@@ -329,15 +329,15 @@ offlineimap way, and have everything sent to my inbox locally.
 *** Outgoing mail at work
 
 #+BEGIN_SRC emacs-lisp
-    (use-package smtpmail
-      :ensure t
-      :config
-      (setq send-mail-function 'smtpmail-send-it
-            smtpmail-default-smtp-server "127.0.0.1"
-            smtpmail-local-domain "cgm.com"
-            smtpmail-stream-type 'network
-            smtpmail-smtp-service 1025
-            smtpmail-auth-credentials "~/.authinfo.gpg"))
+  (use-package smtpmail
+    :ensure t
+    :config
+    (setq send-mail-function 'smtpmail-send-it
+          smtpmail-default-smtp-server "127.0.0.1"
+          smtpmail-local-domain "cgm.com"
+          smtpmail-stream-type 'network
+          smtpmail-smtp-service 1025
+          smtpmail-auth-credentials "~/.authinfo.gpg"))
 #+END_SRC
 
 * Productivity
