@@ -729,6 +729,15 @@ direction of the delete action.
     :init (global-hungry-delete-mode))
 #+END_SRC
 
+** Whitespace cleanup
+
+Speaking of which, by default I want to cleanup whitespace in my
+buffers.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'before-save-hook #'whitespace-cleanup)
+#+END_SRC
+
 ** visual-regexp
 
 See what's going to be replaced!
