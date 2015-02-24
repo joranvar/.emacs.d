@@ -675,25 +675,27 @@ I like to use emacs for Jira, too!
 ** Feeds
 
 #+BEGIN_SRC emacs-lisp
-  (use-package elfeed
-    :ensure t
-    :bind ("C-c e" . elfeed)
-    :config
-    (setq elfeed-feeds
-          '("http://whattheemacsd.com/atom.xml"
-            "http://oremacs.com/atom.xml"
-            "http://emacs-fu.blogspot.com/feeds/posts/default"
-            "http://batsov.com/atom.xml"
-            "http://sachachua.com/blog/feed/"
-            "http://emacsredux.com/atom.xml"
-            "http://endlessparentheses.com/atom.xml"
-            "http://www.lunaryorn.com/feed.atom"
-            "http://mwfogleman.tumblr.com/rss"
-            "http://www.reddit.com/r/emacs.rss"
-            "http://www.reddit.com/r/fsharp.rss"
-            "http://www.reddit.com/r/programmerhumor.rss"
-            "http://feeds.hanselman.com/scotthanselman"
-            "http://blog.cleancoder.com/atom.xml")))
+    (use-package elfeed
+      :ensure t
+      :bind ("C-c e" . elfeed)
+      :config
+      (setq elfeed-feeds
+            (-concat
+             joranvar/private-rss-feeds
+             '("http://whattheemacsd.com/atom.xml"
+               "http://oremacs.com/atom.xml"
+               "http://emacs-fu.blogspot.com/feeds/posts/default"
+               "http://batsov.com/atom.xml"
+               "http://sachachua.com/blog/feed/"
+               "http://emacsredux.com/atom.xml"
+               "http://endlessparentheses.com/atom.xml"
+               "http://www.lunaryorn.com/feed.atom"
+               "http://mwfogleman.tumblr.com/rss"
+               "http://www.reddit.com/r/emacs.rss"
+               "http://www.reddit.com/r/fsharp.rss"
+               "http://www.reddit.com/r/programmerhumor.rss"
+               "http://feeds.hanselman.com/scotthanselman"
+               "http://blog.cleancoder.com/atom.xml"))))
 #+END_SRC
 *** TODO Add xkcd
 
