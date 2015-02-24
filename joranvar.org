@@ -510,20 +510,21 @@ Of course, the most beautiful git client of them all. Git-flow does
 not (yet) work in the windows host, so we don't load it there.
 
 #+BEGIN_SRC emacs-lisp
-    (use-package magit
-      :ensure t
-      :bind ("M-g" . magit-status)
-      :config
-      (progn
-        (use-package magit-gitflow
-          :if (eq system-type 'gnu/linux)
-          :ensure t
-          :config (add-hook 'magit-mode-hook #'turn-on-magit-gitflow))
-        (use-package magit-filenotify
-          :if (eq system-type 'gnu/linux)
-          :ensure t
-          :config (add-hook 'magit-status-mode-hook #'magit-filenotify-mode)))
-      (add-to-list 'magit-repo-dirs (expand-file-name "~/git_pull/")))
+  (use-package magit
+    :ensure t
+    :bind ("M-g" . magit-status)
+    :config
+    (progn
+      (use-package magit-gitflow
+        :if (eq system-type 'gnu/linux)
+        :ensure t
+        :config (add-hook 'magit-mode-hook #'turn-on-magit-gitflow))
+      (use-package magit-filenotify
+        :if (eq system-type 'gnu/linux)
+        :ensure t
+        :config (add-hook 'magit-status-mode-hook #'magit-filenotify-mode))
+      (add-to-list 'magit-repo-dirs (expand-file-name "~/git_pull/"))
+      (setq magit-status-buffer-switch-function 'switch-to-buffer)))
 #+END_SRC
 
 ** Diff highlighting
