@@ -326,6 +326,28 @@ offlineimap way, and have everything sent to my inbox locally.
   (setq gnus-summary-line-format "%U%R%z%I%(%[%4L: %-23,23f%]%) %o %s\n")
 #+END_SRC
 
+*** Refresh mail every two minutes
+
+#+BEGIN_SRC emacs-lisp
+  (gnus-demon-add-handler 'gnus-group-get-new-news 2 t)
+  (gnus-demon-init)
+#+END_SRC
+
+*** Sign mails by default
+
+#+BEGIN_SRC emacs-lisp
+    (add-hook 'gnus-message-setup-hook 'mml-secure-message-sign-pgpmime)
+#+END_SRC
+
+*** Verify and decrypt pgp/mime by default
+
+#+BEGIN_SRC emacs-lisp
+  (setq mm-decrypt-option 'always)
+  (setq mm-verify-option 'always)
+
+  (setq gnus-unbuttonized-mime-types nil)
+#+END_SRC
+
 *** End of gnus config
 
 #+BEGIN_SRC emacs-lisp
