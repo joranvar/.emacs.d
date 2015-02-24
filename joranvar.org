@@ -314,7 +314,7 @@ I used to poll through davmail directly, but now I'm trying the
 offlineimap way, and have everything sent to my inbox locally.
 
 #+BEGIN_SRC emacs-lisp
-  (setq gnus-select-method '(nnmaildir "cgm"
+  (setq gnus-select-method '(nnmaildir "cgm-maildir"
                                        (get-new-mail ())
                                        (target-prefix "")
                                        (directory "~/ProgramData/CGM-Mail/")))
@@ -339,7 +339,7 @@ offlineimap way, and have everything sent to my inbox locally.
     :ensure t
     :config
     (setq send-mail-function 'smtpmail-send-it
-          smtpmail-default-smtp-server "127.0.0.1"
+          smtpmail-default-smtp-server "localhost"
           smtpmail-local-domain "cgm.com"
           smtpmail-stream-type 'network
           smtpmail-smtp-service 1025
