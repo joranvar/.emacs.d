@@ -408,18 +408,26 @@ a list, that *does* save a lot of typing.
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
     :ensure t
-    :bind (("M-p" . helm-projectile-find-file)
-           ("M-P" . helm-projectile-switch-project))
+    :bind (("M-p" . helm-projectile)
+           ("M-P" . projectile-persp-switch-project))
     :diminish projectile-mode
     :init
     (progn
+      (use-package perspective
+        :ensure t
+        :config (progn (persp-mode)
+                       (use-package persp-projectile
+                         :ensure t)))
       (projectile-global-mode)
-      (setq projectile-indexing-method 'alien)
-      (setq projectile-completion-system 'helm)
-      (setq projectile-enable-caching t)
+      (setq projectile-indexing-method 'alien
+            projectile-completion-system 'helm
+            projectile-enable-caching t
+            projectile-enable-idle-timer t)
       (use-package helm-projectile
         :ensure t
-        :config (helm-projectile-on))
+        :config
+        (progn (helm-projectile-on)
+               (setq  projectile-switch-project-action (lambda () (magit-status (projectile-project-root))))))
       (setq magit-repo-dirs (mapcar (lambda (dir)
                                       (substring dir 0 -1))
                                     (-filter (lambda (project)
