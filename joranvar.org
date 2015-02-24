@@ -96,6 +96,12 @@ Default is to disable the gpg-agent.
   (epg-disable-agent)
 #+END_SRC
 
+Also, I encrypt files to myself, always, so I need to set the key.
+
+#+BEGIN_SRC emacs-lisp
+  (setq epa-file-encrypt-to "bart.post@gmail.com")
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
   (load (expand-file-name "secrets.el.gpg" user-emacs-directory))
 #+END_SRC
