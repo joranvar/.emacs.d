@@ -149,7 +149,7 @@ Paradox package management is a bit more. Right now I'm trying it out.
       (paradox-enable)))
 #+END_SRC
 
-** Dash and s
+** Dash and s and f
 
 Functional programming in elisp!
 
@@ -165,6 +165,13 @@ Extended string manipulation in elisp!
     :ensure t)
 #+END_SRC
 
+Extended file manipulation in elisp!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package f
+    :ensure t)
+#+END_SRC
+
 ** My own tool functions
 
 *** locate-nearest
@@ -173,23 +180,13 @@ This function helps find the file with the given regexp nearest to the
 given file. Nearest is: in the same directory or higher.
 
 #+BEGIN_SRC emacs-lisp
-  (defun joranvar/locate-with-subdirs (regex directory)
-    "Find the first file matching REGEX inside DIRECTORY."
-    (progn
-      (--reduce-from
-       (if acc
-           (car (directory-files acc t it))
-         nil)
-       directory
-       (s-split "/" regex))))
-
-  (defun joranvar/locate-nearest (regex origin)
-    "Find the first file matching REGEX nearest to the ORIGIN file."
-    (progn
-      (let ((found (joranvar/locate-with-subdirs regex (file-name-directory origin))))
-        (if found
-            (file-relative-name found (file-name-directory origin))
-          (s-concat "../" (joranvar/locate-nearest regex (s-concat (file-name-directory origin) "../")))))))
+  (defun joranvar/locate-nearest (glob origin)
+    "Find the first file matching GLOB nearest to the ORIGIN file."
+    (let* ((origin (or (and (f-directory? origin) origin)
+                       (f-dirname origin)))
+           (found (f--traverse-upwards (f-glob glob it) origin)))
+      (and found
+           (f-relative (car (f-glob glob found)) origin))))
 #+END_SRC
 
 * Visual
