@@ -657,7 +657,8 @@ and org-mode might be the tool that'll save me.
       (setq org-time-clocksum-format
             '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)
             org-clock-into-drawer t
-            org-log-into-drawer t)
+            org-log-into-drawer t
+            org-startup-folded 'content)
       (add-hook 'before-save-hook #'org-update-all-dblocks)
       (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
 
