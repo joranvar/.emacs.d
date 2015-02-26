@@ -311,10 +311,10 @@ I used to poll through davmail directly, but now I'm trying the
 offlineimap way, and have everything sent to my inbox locally.
 
 #+BEGIN_SRC emacs-lisp
-  (setq gnus-select-method '(nnmaildir "cgm-maildir"
-                                       (get-new-mail ())
-                                       (target-prefix "")
-                                       (directory "~/ProgramData/CGM-Mail/")))
+  (setq gnus-select-method `(nnimap "server"
+                                    (nnimap-address ,joranvar/mailserver)
+                                    (nnimap-stream network)
+                                    (nnimap-server-port 143)))
 #+END_SRC
 
 *** Display of the summary buffer
