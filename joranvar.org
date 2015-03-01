@@ -313,8 +313,37 @@ offlineimap way, and have everything sent to my inbox locally.
 #+BEGIN_SRC emacs-lisp
   (setq gnus-select-method `(nnimap "server"
                                     (nnimap-address ,joranvar/mailserver)
+                                    (nnimap-user ,joranvar/server-user)
                                     (nnimap-stream network)
                                     (nnimap-server-port 143)))
+
+  (add-to-list 'gnus-secondary-select-methods `(nnimap "gmail"
+                                                       (nnimap-address ,joranvar/mailserver)
+                                                       (nnimap-user ,joranvar/gmail-user)
+                                                       (nnimap-stream network)
+                                                       (nnimap-server-port 143)))
+#+END_SRC
+
+*** Outgoing mail
+
+#+BEGIN_SRC emacs-lisp
+  (setq gnus-posting-styles `(("^nnimap\\+server:"
+                               (address ,joranvar/work-mail)
+                               ("X-Message-SMTP-Method" ,(concat "smtp localhost 1025 " joranvar/work-mail))
+                               (signature ,joranvar/work-signature))
+                              ("^nnimap\\+gmail:"
+                               (address joranvar/gmail-mail)
+                               ("X-Message-SMTP-Method" ,(concat "smtp smtp.gmail.com 587 " joranvar/gmail-mail)))))
+#+END_SRC
+
+*** Fetching mail
+
+I use offlineimap, and do not want to have that autocycling, so I will
+manually ask it to get the mail, please.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'gnus-get-new-news-hook (lambda () (shell-command (concat "ssh " joranvar/mailserver " 'offlineimap'") "*offlineimap*")))
+#+END_SRC
 #+END_SRC
 
 *** Display of the summary buffer
