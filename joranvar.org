@@ -359,10 +359,26 @@ offlineimap way, and have everything sent to my inbox locally.
     :config
     (setq send-mail-function 'smtpmail-send-it
           smtpmail-default-smtp-server "localhost"
-          smtpmail-local-domain "cgm.com"
           smtpmail-stream-type 'network
           smtpmail-smtp-service 1025
           smtpmail-auth-credentials "~/.authinfo.gpg"))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+*** bbdb
+
+Manage contacts!
+
+#+BEGIN_SRC emacs-lisp
+    (use-package bbdb
+      :ensure t
+      :config
+      (progn
+        (bbdb-initialize 'gnus 'message)
+        (bbdb-insinuate-message)
+        (bbdb-insinuate-gnus)))
 #+END_SRC
 
 * Productivity
