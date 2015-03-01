@@ -390,6 +390,13 @@ manually ask it to get the mail, please.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'gnus-get-new-news-hook (lambda () (shell-command (concat "ssh " joranvar/mailserver " 'offlineimap'") "*offlineimap*")))
 #+END_SRC
+
+*** Gravatars
+
+Show me your face!
+
+#+BEGIN_SRC emacs-lisp
+  (setq gnus-treat-from-gravatar 'head)
 #+END_SRC
 
 *** Display of the summary buffer
