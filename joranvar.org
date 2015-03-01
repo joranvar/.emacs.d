@@ -826,6 +826,14 @@ I like to use emacs for Jira, too!
         org-jira-default-jql "sprint in openSprints() AND component = \"Team Platform\" order by priority desc, created asc")
 #+END_SRC
 
+But I also like to experiment with my new jiralib-rest implementation.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package jiralib-rest
+    :load-path "site-lisp/org-jira"
+    :pin manual)
+#+END_SRC
+
 ** gnorb
 
 This combines gnus, org-mode and bbdb (v3) for tracking and
