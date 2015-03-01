@@ -253,18 +253,23 @@ For dark mode, tango-2 seems best suited.
 I want to be able to toggle between light and dark mode (when contrast is needed).
 
 #+BEGIN_SRC emacs-lisp
-  (global-set-key
-   (kbd "C-c t")
-   (lambda () (interactive) (progn
-                         (setq frame-background-mode
-                               (if (eq frame-background-mode 'light)
-                                   'dark
-                                 'light))
-                         (if (eq frame-background-mode 'light)
-                             (progn (disable-theme 'tango-2)
-                                    (load-theme 'leuven t))
-                           (progn (disable-theme 'leuven)
-                                  (load-theme 'tango-2 t))))))
+  (defvar joranvar/dark-theme 'tango-2
+    "Theme for dark frame background mode")
+
+  (defvar joranvar/light-theme 'leuven
+    "Theme for light frame background mode")
+
+  (defun joranvar/switch-frame-background-mode ()
+    "Switch background mode from light to dark, and adjust the theme accordingly."
+    (interactive)
+    (-let (((old-theme new-mode new-theme) (if (eq frame-background-mode 'dark)
+                                               '(joranvar/dark-theme light joranvar/light-theme)
+                                             '(joranvar/light-theme dark joranvar/dark-theme))))
+      (setq frame-background-mode new-mode)
+      (disable-theme (symbol-value old-theme))
+      (load-theme (symbol-value new-theme) t)))
+
+  (global-set-key (kbd "C-c t") #'joranvar/switch-frame-background-mode)
 #+END_SRC
 
 ** Font size
