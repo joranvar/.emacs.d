@@ -10,3 +10,6 @@
 [submodule "site-lisp/org-jira"]
 	path = site-lisp/org-jira
 	url = git@github.com:joranvar/org-jira.git
+[submodule "site-lisp/gnorb"]
+	path = site-lisp/gnorb
+	url = git@github.com:joranvar/gnorb.git

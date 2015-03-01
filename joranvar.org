@@ -727,13 +727,14 @@ This combines gnus, org-mode and bbdb (v3) for tracking and
 planning. Let's load it up!
 
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package gnorb
-  ;;   :ensure t
-  ;;   :config
-  ;;   (progn
-  ;;     (gnus-registry-initialize)
-  ;;     (add-to-list 'gnus-secondary-select-methods '(nngnorb "gnorb"))
-  ;;     (gnorb-tracking-initialize)
+  (use-package gnorb
+    :load-path "site-lisp/"
+    :pin manual
+    :config
+    (progn
+      (gnus-registry-initialize)
+      (add-to-list 'gnus-secondary-select-methods '(nngnorb "gnorb"))
+      (gnorb-tracking-initialize)))
   ;;     (eval-after-load "gnorb-bbdb"
   ;;       '(progn
   ;;          (define-key bbdb-mode-map (kbd "O") 'gnorb-bbdb-tag-agenda)
