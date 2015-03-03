@@ -316,11 +316,11 @@ I used to poll through davmail directly, but now I'm trying the
 offlineimap way, and have everything sent to my inbox locally.
 
 #+BEGIN_SRC emacs-lisp
-  (setq gnus-select-method `(nnimap "server"
-                                    (nnimap-address ,joranvar/mailserver)
-                                    (nnimap-user ,joranvar/server-user)
-                                    (nnimap-stream network)
-                                    (nnimap-server-port 143)))
+  (add-to-list 'gnus-secondary-select-methods `(nnimap "server"
+                                                       (nnimap-address ,joranvar/mailserver)
+                                                       (nnimap-user ,joranvar/server-user)
+                                                       (nnimap-stream network)
+                                                       (nnimap-server-port 143)))
 
   (add-to-list 'gnus-secondary-select-methods `(nnimap "gmail"
                                                        (nnimap-address ,joranvar/mailserver)
@@ -445,7 +445,7 @@ Show me your face!
     :ensure t
     :config
     (setq send-mail-function 'smtpmail-send-it
-          smtpmail-default-smtp-server "localhost"
+          smtpmail-default-smtp-server "127.0.0.1"
           smtpmail-stream-type 'network
           smtpmail-smtp-service 1025
           smtpmail-auth-credentials "~/.authinfo.gpg"))
