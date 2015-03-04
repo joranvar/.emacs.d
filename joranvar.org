@@ -48,6 +48,16 @@ configuration at the moment, so I will have to resort to this for now.
       "The executable that provides csharp checking.")
 #+END_SRC
 
+** Printing
+
+#+BEGIN_SRC emacs-lisp
+  (when (eq system-type 'windows-nt)
+    (setenv "GS_LIB" "C:/Program Files/gs/gs9.15;C:/Program Files/gs/gs9.15/lib")
+    (setq ps-lpr-command "C:/Program Files/gs/gs9.15/bin/gswin64c.exe")
+    (setq ps-lpr-switches '("-q" "-dNOPAUSE" "-dBATCH" "-sDEVICE=mswinpr2"))
+    (setq ps-printer-name t))
+#+END_SRC
+
 * General settings
 
 ** Personal information
