@@ -1008,3 +1008,24 @@ See what's going to be replaced!
     :ensure t
     :bind ("M-s r" . vr/replace))
 #+END_SRC
+
+* Startup
+
+Finally, when I start up emacs, I want the following to be setup for
+me.
+
+** Create mail perspective with gnus
+
+#+BEGIN_SRC emacs-lisp
+  (save-excursion
+    (persp-switch "mail")
+    (gnus))
+#+END_SRC
+
+** Create main perspective with org agenda
+
+#+BEGIN_SRC emacs-lisp
+  (save-excursion
+    (persp-switch "main")
+    (org-agenda nil "n"))
+#+END_SRC
