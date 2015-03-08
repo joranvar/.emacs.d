@@ -884,6 +884,16 @@ Most importantly: do not use tabs.
   (setq-default indent-tabs-mode nil)
 #+END_SRC
 
+*** Haskell (xmonad)
+
+#+BEGIN_SRC emacs-lisp
+  (use-package haskell-mode
+    :ensure t
+    :config
+    (progn
+      (add-hook 'haskell-mode-hook #'haskell-indent-mode)))
+#+END_SRC
+
 ** Tools
 *** Flycheck
 
