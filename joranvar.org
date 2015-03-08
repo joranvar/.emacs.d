@@ -189,6 +189,14 @@ given file. Nearest is: in the same directory or higher.
            (f-relative (car (f-glob glob found)) origin))))
 #+END_SRC
 
+** Tramp configuration
+
+The default prompt recognition setting is not enough for my situation.
+
+#+BEGIN_SRC emacs-lisp
+  (setq tramp-shell-prompt-pattern "\\(?:^\\|^M\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
+#+END_SRC
+
 * Visual
 
 Beauty is in the eye of the beholder. So let's make emacs
