@@ -40,12 +40,13 @@ configuration at the moment, so I will have to resort to this for now.
 
 ** Where can I find omnisharp?
 #+BEGIN_SRC emacs-lisp
-    (defvar joranvar/omnisharp-path
-      (substitute-in-file-name
-       (if (eq system-type 'gnu/linux)
-           "$HOME/git_pull/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe"
-         "D:\\Ontwikkeling\\omnisharp-server\\OmniSharp\\bin\\Debug\\OmniSharp.exe"))
-      "The executable that provides csharp checking.")
+  (defvar joranvar/omnisharp-path
+    (substitute-in-file-name
+     (if (eq system-type 'gnu/linux)
+         "$HOME/git_pull/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe"
+       ""))
+       ;; "D:\\Ontwikkeling\\omnisharp-server\\OmniSharp\\bin\\Debug\\OmniSharp.exe"))
+    "The executable that provides csharp checking.")
 #+END_SRC
 
 ** Printing
@@ -839,9 +840,12 @@ I like to use emacs for Jira, too!
 But I also like to experiment with my new jiralib-rest implementation.
 
 #+BEGIN_SRC emacs-lisp
+(use-package request
+  :ensure t
+  :config
   (use-package jiralib-rest
     :load-path "site-lisp/org-jira"
-    :pin manual)
+    :pin manual))
 #+END_SRC
 
 ** gnorb
