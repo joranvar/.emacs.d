@@ -200,6 +200,14 @@ given file. Nearest is: in the same directory or higher.
            (f-relative (car (f-glob glob found)) origin))))
 #+END_SRC
 
+** Tramp configuration
+
+The default prompt recognition setting is not enough for my situation.
+
+#+BEGIN_SRC emacs-lisp
+  (setq tramp-shell-prompt-pattern "\\(?:^\\|^M\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
+#+END_SRC
+
 * Visual
 
 Beauty is in the eye of the beholder. So let's make emacs
@@ -462,9 +470,6 @@ Show me your face!
           smtpmail-auth-credentials "~/.authinfo.gpg"))
 #+END_SRC
 
-#+RESULTS:
-: t
-
 *** bbdb
 
 Manage contacts!
@@ -502,6 +507,125 @@ place to watch the stuff.
 #+BEGIN_SRC emacs-lisp
   (use-package kanban
     :ensure t)
+#+END_SRC
+
+* Org mode
+
+Keeping things organized, that's an aspiration I'd like to fulfill,
+and org-mode might be the tool that'll save me.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :init (progn
+            (defvar joranvar/org-directory (f-join joranvar/home "Documents/org")
+              "The location of my org files.")
+            (defvar joranvar/org-default (f-join joranvar/org-directory "default.org")
+              "The location of my default org file."))
+    :bind (("C-c a" . org-agenda)
+           ("C-c c" . org-capture))
+    :config
+    (progn
+      (setq org-agenda-files (-distinct (-concat org-agenda-files (f--files joranvar/org-directory (and (f-ext? it "org") (not (s-ends-with? "~" (f-filename it)))) t)))
+            org-time-clocksum-format '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)
+            org-clock-into-drawer t
+            org-log-into-drawer t
+            org-startup-folded 'content
+            org-clock-clocked-in-display 'both)
+      (setq org-capture-templates
+                   '(("m" "Message" entry (file+headline joranvar/org-default "Incoming mail")
+                     "* FROM: %:from Subject: %:subject\n   %a")))
+      (add-hook 'before-save-hook #'org-update-all-dblocks)
+      (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
+
+      ;; Workaround for a compatibility issue with the newest emacs from github?
+      (defun org-font-lock-ensure ()
+        (font-lock-fontify-buffer))))
+#+END_SRC
+
+** Jira integration
+
+I like to use emacs for Jira, too!
+
+#+BEGIN_SRC emacs-lisp
+  (require 'org-jira)
+  (setq jiralib-url joranvar/jira-server
+        org-jira-default-jql "sprint in openSprints() AND component = \"Team Platform\" order by priority desc, created asc")
+#+END_SRC
+
+But I also like to experiment with my new jiralib-rest implementation.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package jiralib-rest
+    :load-path "site-lisp/org-jira"
+    :pin manual)
+#+END_SRC
+
+** gnorb
+
+This combines gnus, org-mode and bbdb (v3) for tracking and
+planning. Let's load it up!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package gnorb
+    :load-path "site-lisp/"
+    :pin manual
+    :config
+    (progn
+      (gnus-registry-initialize)
+      (add-to-list 'gnus-secondary-select-methods '(nngnorb "gnorb"))
+      (gnorb-tracking-initialize)))
+  ;;     (eval-after-load "gnorb-bbdb"
+  ;;       '(progn
+  ;;          (define-key bbdb-mode-map (kbd "O") 'gnorb-bbdb-tag-agenda)
+  ;;          (define-key bbdb-mode-map (kbd "S") 'gnorb-bbdb-mail-search)
+  ;;          (define-key bbdb-mode-map [remap bbdb-mail] 'gnorb-bbdb-mail)
+  ;;          (define-key bbdb-mode-map (kbd "l") 'gnorb-bbdb-open-link)
+  ;;          (global-set-key (kbd "C-c C") 'gnorb-bbdb-cite-contact)))
+
+  ;;     (eval-after-load "gnorb-org"
+  ;;       '(progn
+  ;;          (org-defkey org-mode-map (kbd "C-c C") 'gnorb-org-contact-link)
+  ;;          (org-defkey org-mode-map (kbd "C-c t") 'gnorb-org-handle-mail)
+  ;;          (org-defkey org-mode-map (kbd "C-c e") 'gnorb-org-view)
+  ;;          (org-defkey org-mode-map (kbd "C-c E") 'gnorb-org-email-subtree)
+  ;;          (org-defkey org-mode-map (kbd "C-c V") 'gnorb-org-popup-bbdb)
+  ;;          (setq gnorb-org-agenda-popup-bbdb t)
+  ;;          (eval-after-load "org-agenda"
+  ;;            '(progn (org-defkey org-agenda-mode-map (kbd "H") 'gnorb-org-handle-mail)
+  ;;                    (org-defkey org-agenda-mode-map (kbd "V") 'gnorb-org-popup-bbdb)))))
+
+  ;;     (eval-after-load "gnorb-gnus"
+  ;;       '(progn
+  ;;          (define-key gnus-summary-mime-map "a" 'gnorb-gnus-article-org-attach)
+  ;;          (define-key gnus-summary-mode-map (kbd "C-c t") 'gnorb-gnus-incoming-do-todo)
+  ;;          (push '("attach to org heading" . gnorb-gnus-mime-org-attach)
+  ;;                gnus-mime-action-alist)
+  ;;          ;; The only way to add mime button command keys is by redefining
+  ;;          ;; gnus-mime-button-map, possibly not ideal. Ideal would be a
+  ;;          ;; setter function in gnus itself.
+  ;;          (push '(gnorb-gnus-mime-org-attach "a" "Attach to Org heading")
+  ;;                gnus-mime-button-commands)
+  ;;          (setq gnus-mime-button-map
+  ;;                (let ((map (make-sparse-keymap)))
+  ;;                  (define-key map gnus-mouse-2 'gnus-article-push-button)
+  ;;                  (define-key map gnus-down-mouse-3 'gnus-mime-button-menu)
+  ;;                  (dolist (c gnus-mime-button-commands)
+  ;;                    (define-key map (cadr c) (car c)))
+  ;;                  map))))
+
+  ;;     (eval-after-load "message"
+  ;;       '(progn
+  ;;          (define-key message-mode-map (kbd "C-c t") 'gnorb-gnus-outgoing-do-todo)))))
+#+END_SRC
+
+** Mobile
+
+Sync stuff up with my phone!
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-directory joranvar/org-directory
+        org-mobile-directory joranvar/org-mobile-directory
+        org-mobile-inbox-for-pull (f-join joranvar/org-directory "mobile-inbox.org"))
 #+END_SRC
 
 * Less typing
@@ -556,11 +680,21 @@ a list, that *does* save a lot of typing.
             projectile-completion-system 'helm
             projectile-enable-caching t
             projectile-enable-idle-timer t)
+      (use-package org-projectile
+        :ensure t
+        :bind ("C-c n p" . org-projectile:project-todo-completing-read)
+        :config
+        (progn
+          (org-projectile:per-repo);
+          (setq org-projectile:per-repo-filename "README.org"
+                org-agenda-files (append org-agenda-files (org-projectile:todo-files)))
+          (add-to-list 'org-capture-templates
+                       (org-projectile:project-todo-entry "l" "* TODO %? %a\n" "Linked Project TODO"))))
       (use-package helm-projectile
         :ensure t
         :config
         (progn (helm-projectile-on)
-               (setq  projectile-switch-project-action (lambda () (magit-status (projectile-project-root))))))
+               (setq projectile-switch-project-action (lambda () (magit-status (projectile-project-root))))))
       (setq magit-repo-dirs (mapcar (lambda (dir)
                                       (substring dir 0 -1))
                                     (-filter (lambda (project)
@@ -769,6 +903,16 @@ Most importantly: do not use tabs.
   (setq-default indent-tabs-mode nil)
 #+END_SRC
 
+*** Haskell (xmonad)
+
+#+BEGIN_SRC emacs-lisp
+  (use-package haskell-mode
+    :ensure t
+    :config
+    (progn
+      (add-hook 'haskell-mode-hook #'haskell-indent-mode)))
+#+END_SRC
+
 ** Tools
 *** Flycheck
 
@@ -794,116 +938,6 @@ the current buffer.
     :config
     (progn
       (add-hook 'prog-mode-hook #'highlight-symbol-mode)))
-#+END_SRC
-
-* Org mode
-
-Keeping things organized, that's an aspiration I'd like to fulfill,
-and org-mode might be the tool that'll save me.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org
-    :init (defvar joranvar/org-directory (s-concat joranvar/home "/Documents/org")
-            "The location of my org files.")
-    :bind ("C-c a" . org-agenda)
-    :config
-    (progn
-      (dolist (orgfile (-concat
-                        (directory-files joranvar/org-directory t "\\w+\\.org$" t)
-                        (directory-files (s-concat joranvar/org-directory "/projects") t "\\w+\\.org$" t)))
-        (when (file-regular-p orgfile)
-          (add-to-list 'org-agenda-files orgfile)))
-      (setq org-time-clocksum-format
-            '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)
-            org-clock-into-drawer t
-            org-log-into-drawer t
-            org-startup-folded 'content)
-      (add-hook 'before-save-hook #'org-update-all-dblocks)
-      (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
-
-      ;; Workaround for a compatibility issue with the newest emacs from github?
-      (defun org-font-lock-ensure ()
-        (font-lock-fontify-buffer))
-      ))
-#+END_SRC
-
-** Jira integration
-
-I like to use emacs for Jira, too!
-
-#+BEGIN_SRC emacs-lisp
-  (require 'org-jira)
-  (setq jiralib-url joranvar/jira-server
-        org-jira-default-jql "sprint in openSprints() AND component = \"Team Platform\" order by priority desc, created asc")
-#+END_SRC
-
-But I also like to experiment with my new jiralib-rest implementation.
-
-#+BEGIN_SRC emacs-lisp
-(use-package request
-  :ensure t
-  :config
-  (use-package jiralib-rest
-    :load-path "site-lisp/org-jira"
-    :pin manual))
-#+END_SRC
-
-** gnorb
-
-This combines gnus, org-mode and bbdb (v3) for tracking and
-planning. Let's load it up!
-
-#+BEGIN_SRC emacs-lisp
-  (use-package gnorb
-    :load-path "site-lisp/"
-    :pin manual
-    :config
-    (progn
-      (gnus-registry-initialize)
-      (add-to-list 'gnus-secondary-select-methods '(nngnorb "gnorb"))
-      (gnorb-tracking-initialize)))
-  ;;     (eval-after-load "gnorb-bbdb"
-  ;;       '(progn
-  ;;          (define-key bbdb-mode-map (kbd "O") 'gnorb-bbdb-tag-agenda)
-  ;;          (define-key bbdb-mode-map (kbd "S") 'gnorb-bbdb-mail-search)
-  ;;          (define-key bbdb-mode-map [remap bbdb-mail] 'gnorb-bbdb-mail)
-  ;;          (define-key bbdb-mode-map (kbd "l") 'gnorb-bbdb-open-link)
-  ;;          (global-set-key (kbd "C-c C") 'gnorb-bbdb-cite-contact)))
-
-  ;;     (eval-after-load "gnorb-org"
-  ;;       '(progn
-  ;;          (org-defkey org-mode-map (kbd "C-c C") 'gnorb-org-contact-link)
-  ;;          (org-defkey org-mode-map (kbd "C-c t") 'gnorb-org-handle-mail)
-  ;;          (org-defkey org-mode-map (kbd "C-c e") 'gnorb-org-view)
-  ;;          (org-defkey org-mode-map (kbd "C-c E") 'gnorb-org-email-subtree)
-  ;;          (org-defkey org-mode-map (kbd "C-c V") 'gnorb-org-popup-bbdb)
-  ;;          (setq gnorb-org-agenda-popup-bbdb t)
-  ;;          (eval-after-load "org-agenda"
-  ;;            '(progn (org-defkey org-agenda-mode-map (kbd "H") 'gnorb-org-handle-mail)
-  ;;                    (org-defkey org-agenda-mode-map (kbd "V") 'gnorb-org-popup-bbdb)))))
-
-  ;;     (eval-after-load "gnorb-gnus"
-  ;;       '(progn
-  ;;          (define-key gnus-summary-mime-map "a" 'gnorb-gnus-article-org-attach)
-  ;;          (define-key gnus-summary-mode-map (kbd "C-c t") 'gnorb-gnus-incoming-do-todo)
-  ;;          (push '("attach to org heading" . gnorb-gnus-mime-org-attach)
-  ;;                gnus-mime-action-alist)
-  ;;          ;; The only way to add mime button command keys is by redefining
-  ;;          ;; gnus-mime-button-map, possibly not ideal. Ideal would be a
-  ;;          ;; setter function in gnus itself.
-  ;;          (push '(gnorb-gnus-mime-org-attach "a" "Attach to Org heading")
-  ;;                gnus-mime-button-commands)
-  ;;          (setq gnus-mime-button-map
-  ;;                (let ((map (make-sparse-keymap)))
-  ;;                  (define-key map gnus-mouse-2 'gnus-article-push-button)
-  ;;                  (define-key map gnus-down-mouse-3 'gnus-mime-button-menu)
-  ;;                  (dolist (c gnus-mime-button-commands)
-  ;;                    (define-key map (cadr c) (car c)))
-  ;;                  map))))
-
-  ;;     (eval-after-load "message"
-  ;;       '(progn
-  ;;          (define-key message-mode-map (kbd "C-c t") 'gnorb-gnus-outgoing-do-todo)))))
 #+END_SRC
 
 * Hobbies
@@ -984,4 +1018,25 @@ See what's going to be replaced!
   (use-package visual-regexp
     :ensure t
     :bind ("M-s r" . vr/replace))
+#+END_SRC
+
+* Startup
+
+Finally, when I start up emacs, I want the following to be setup for
+me.
+
+** Create mail perspective with gnus
+
+#+BEGIN_SRC emacs-lisp
+  (save-excursion
+    (persp-switch "mail")
+    (gnus))
+#+END_SRC
+
+** Create main perspective with org agenda
+
+#+BEGIN_SRC emacs-lisp
+  (save-excursion
+    (persp-switch "main")
+    (org-agenda nil "n"))
 #+END_SRC
