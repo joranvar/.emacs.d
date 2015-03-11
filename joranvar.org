@@ -524,7 +524,13 @@ and org-mode might be the tool that'll save me.
            ("C-c c" . org-capture))
     :config
     (progn
-      (setq org-agenda-files (-distinct (-concat org-agenda-files (f--files joranvar/org-directory (and (f-ext? it "org") (not (s-ends-with? "~" (f-filename it)))) t)))
+      (setq org-agenda-files
+            (-distinct
+             (-concat org-agenda-files
+                      (f--files joranvar/org-directory
+                                (and (f-ext? it "org")
+                                     (not (s-ends-with? "~" (f-filename it))))
+                                t)))
             org-time-clocksum-format '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)
             org-clock-into-drawer t
             org-log-into-drawer t
