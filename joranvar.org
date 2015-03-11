@@ -542,6 +542,15 @@ and org-mode might be the tool that'll save me.
       (add-hook 'before-save-hook #'org-update-all-dblocks)
       (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
 
+      ;; Part where I use settings from http://doc.norang.ca/org-mode.html to refile everywhere
+
+
+      (setq org-refile-targets '((nil :maxlevel . 9)
+                                 (org-agenda-files :maxlevel . 9)) ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+            org-refile-use-outline-path t  ; Use full outline paths for refile targets - we file directly with HELM
+            org-outline-path-complete-in-steps nil ; Targets complete directly with HELM
+            org-refile-allow-creating-parent-nodes 'confirm) ; Allow refile to create parent tasks with confirmation
+
       ;; Workaround for a compatibility issue with the newest emacs from github?
       (defun org-font-lock-ensure ()
         (font-lock-fontify-buffer))))
