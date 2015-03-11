@@ -1059,7 +1059,15 @@ me.
 ** Create main perspective with org agenda
 
 #+BEGIN_SRC emacs-lisp
-  (save-excursion
+  (let ((org-agenda-window-setup 'current-window))
     (persp-switch "main")
     (org-agenda nil "n"))
+#+END_SRC
+
+** Do not show splash screen
+
+I want to see the agenda, so skip the splash screen.
+
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-startup-screen t)
 #+END_SRC
