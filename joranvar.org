@@ -1034,6 +1034,15 @@ See what's going to be replaced!
     :bind ("M-s r" . vr/replace))
 #+END_SRC
 
+** Auto revert
+
+Buffers reverting when something changed on disk (and when the buffer
+has not yet been changed by me), sounds logical!
+
+#+BEGIN_SRC emacs-lisp
+  (global-auto-revert-mode)
+#+END_SRC
+
 * Startup
 
 Finally, when I start up emacs, I want the following to be setup for
