@@ -990,6 +990,26 @@ the current buffer.
 
 *** TODO Add LoL?
 
+** Music
+
+*** emms
+
+#+BEGIN_SRC emacs-lisp
+  (use-package emms
+    :ensure t
+    :config
+    (progn
+      (emms-standard) ;; or (emms-devel) if you want all features
+      (setq emms-source-file-default-directory "~/music"
+            emms-info-asynchronously t
+            emms-show-format "  %s")
+      (if (executable-find "mplayer")
+          (setq emms-player-list '(emms-player-mpg321
+                                   emms-player-ogg123
+                                   emms-player-mplayer))
+        (emms-default-players))))
+#+END_SRC
+
 * Web browsing
 
 I use wee, now I have a nice recent build. The default search engine
