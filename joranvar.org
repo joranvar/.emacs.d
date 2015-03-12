@@ -525,7 +525,13 @@ and org-mode might be the tool that'll save me.
            ("C-c c" . org-capture))
     :config
     (progn
-      (setq org-agenda-files (-distinct (-concat org-agenda-files (f--files joranvar/org-directory (and (f-ext? it "org") (not (s-ends-with? "~" (f-filename it)))) t)))
+      (setq org-agenda-files
+            (-distinct
+             (-concat org-agenda-files
+                      (f--files joranvar/org-directory
+                                (and (f-ext? it "org")
+                                     (not (s-ends-with? "~" (f-filename it))))
+                                t)))
             org-time-clocksum-format '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)
             org-clock-into-drawer t
             org-log-into-drawer t
@@ -536,6 +542,15 @@ and org-mode might be the tool that'll save me.
                      "* FROM: %:from Subject: %:subject\n   %a")))
       (add-hook 'before-save-hook #'org-update-all-dblocks)
       (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
+
+      ;; Part where I use settings from http://doc.norang.ca/org-mode.html to refile everywhere
+
+
+      (setq org-refile-targets '((nil :maxlevel . 9)
+                                 (org-agenda-files :maxlevel . 9)) ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+            org-refile-use-outline-path t  ; Use full outline paths for refile targets - we file directly with HELM
+            org-outline-path-complete-in-steps nil ; Targets complete directly with HELM
+            org-refile-allow-creating-parent-nodes 'confirm) ; Allow refile to create parent tasks with confirmation
 
       ;; Workaround for a compatibility issue with the newest emacs from github?
       (defun org-font-lock-ensure ()
@@ -1020,6 +1035,15 @@ See what's going to be replaced!
     :bind ("M-s r" . vr/replace))
 #+END_SRC
 
+** Auto revert
+
+Buffers reverting when something changed on disk (and when the buffer
+has not yet been changed by me), sounds logical!
+
+#+BEGIN_SRC emacs-lisp
+  (global-auto-revert-mode)
+#+END_SRC
+
 * Startup
 
 Finally, when I start up emacs, I want the following to be setup for
@@ -1036,7 +1060,15 @@ me.
 ** Create main perspective with org agenda
 
 #+BEGIN_SRC emacs-lisp
-  (save-excursion
+  (let ((org-agenda-window-setup 'current-window))
     (persp-switch "main")
     (org-agenda nil "n"))
+#+END_SRC
+
+** Do not show splash screen
+
+I want to see the agenda, so skip the splash screen.
+
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-startup-screen t)
 #+END_SRC
