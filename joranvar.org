@@ -685,7 +685,7 @@ a list, that *does* save a lot of typing.
         :bind ("C-c n p" . org-projectile:project-todo-completing-read)
         :config
         (progn
-          (org-projectile:per-repo);
+          (org-projectile:per-repo)
           (setq org-projectile:per-repo-filename "README.org"
                 org-agenda-files (append org-agenda-files (org-projectile:todo-files)))
           (add-to-list 'org-capture-templates
