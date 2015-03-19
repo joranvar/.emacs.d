@@ -547,6 +547,7 @@ and org-mode might be the tool that'll save me.
       (setq org-capture-templates
                    '(("m" "Message" entry (file+headline joranvar/org-default "Incoming mail")
                      "* FROM: %:from Subject: %:subject\n   %a")))
+      (setq org-clock-persist 'history)
       (org-clock-persistence-insinuate)
       (add-hook 'before-save-hook #'org-update-all-dblocks)
       (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
