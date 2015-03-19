@@ -1053,7 +1053,8 @@ See what's going to be replaced!
 #+BEGIN_SRC emacs-lisp
   (use-package visual-regexp
     :ensure t
-    :bind ("M-s r" . vr/replace))
+    :bind (("M-s r" . vr/replace)
+           ("M-s %" . vr/query-replace)))
 #+END_SRC
 
 ** Auto revert
