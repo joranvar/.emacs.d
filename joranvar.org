@@ -956,6 +956,15 @@ the current buffer.
       (add-hook 'prog-mode-hook #'highlight-symbol-mode)))
 #+END_SRC
 
+*** Compilation
+
+By default, I want the compilation buffer to scroll until the first
+error is encountered (or to the bottom).
+
+#+BEGIN_SRC emacs-lisp
+  (setq compilation-scroll-output 'first-error)
+#+END_SRC
+
 * Hobbies
 
 ** Feeds
