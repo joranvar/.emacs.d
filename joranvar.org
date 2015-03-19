@@ -697,6 +697,20 @@ buffer, then C-c C-p to enter wgrep mode.
     :ensure t)
 #+END_SRC
 
+** The Platinum Searcher
+
+helm-ag has a good name, but does not work on Windows (as far as I
+read).  helm-pt should be faster anyways, and I would really like to
+use it for my projects.  So here goes...
+
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-pt
+    :ensure t
+    :bind ("C-c p s p" . helm-projectile-pt)
+    :config (progn (when (eq system-type 'windows-nt)
+                       (setq helm-pt-command "D:\\Apps\\emacs\\bin\\pt.exe"))))
+#+END_SRC
+
 ** Projectile
 
 When navigating to a file is as easy as choosing the project name from
