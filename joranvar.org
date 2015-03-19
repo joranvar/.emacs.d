@@ -644,6 +644,22 @@ Sync stuff up with my phone!
         org-mobile-inbox-for-pull (f-join joranvar/org-directory "mobile-inbox.org"))
 #+END_SRC
 
+** Blogging
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org2blog
+    :ensure t
+    :config
+    (progn
+      (let ((credentials (auth-source-user-and-password "growingSoftware")))
+        (setq org2blog/wp-blog-alist
+              `(("growing-software"
+                 :url "http://www.joranvar.me/growing-software/xmlrpc.php"
+                 :username ,(car credentials)
+                 :password ,(cadr credentials)
+                 :tags-as-categories nil))
+              org2blog/wp-show-post-in-browser 'show))))
+#+END_SRC
 * Less typing
 
 Several packages and settings will help me type less to accomplish the
