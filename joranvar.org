@@ -101,10 +101,11 @@ so (thanks [[http://www.enigmacurry.com/2009/01/14/extending-emacs-with-advice/]
     (message "EasyPG gpg-agent re-enabled"))
 #+END_SRC
 
-Default is to disable the gpg-agent.
+Default is to disable the gpg-agent when on a terminal.
 
 #+BEGIN_SRC emacs-lisp
-  (epg-disable-agent)
+  (unless (null (getenv "GNOME-KEYRING-PID"))
+    (epg-disable-agent))
 #+END_SRC
 
 Also, I encrypt files to myself, always, so I need to set the key.
