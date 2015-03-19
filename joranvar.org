@@ -413,7 +413,13 @@ I use offlineimap, and do not want to have that autocycling, so I will
 manually ask it to get the mail, please.
 
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'gnus-get-new-news-hook (lambda () (shell-command (concat "ssh " joranvar/mailserver " 'offlineimap'") "*offlineimap*")))
+  (add-hook 'gnus-get-new-news-hook
+            (lambda () (shell-command
+                   (concat
+                    (if (eq system-type 'windows-nt)
+                        "plink -load Home "
+                      (concat "ssh " joranvar/mailserver))
+                    " 'offlineimap'") "*offlineimap*")))
 #+END_SRC
 
 *** Gravatars
