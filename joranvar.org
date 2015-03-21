@@ -655,18 +655,13 @@ Sync stuff up with my phone!
 ** Blogging
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org2blog
+  (use-package org-page
     :ensure t
-    :config
-    (progn
-      (let ((credentials (auth-source-user-and-password "growingSoftware")))
-        (setq org2blog/wp-blog-alist
-              `(("growing-software"
-                 :url "http://www.joranvar.me/growing-software/xmlrpc.php"
-                 :username ,(car credentials)
-                 :password ,(cadr credentials)
-                 :tags-as-categories nil))
-              org2blog/wp-show-post-in-browser 'show))))
+    :config (setq op/repository-directory "~/git_pull/joranvar.github.io"
+                  op/site-domain "http://joranvar.github.io"
+                  op/site-main-title "Growing Software"
+                  op/site-sub-title "for the love of it"
+                  op/personal-github-link "http://github.com/joranvar"))
 #+END_SRC
 * Less typing
 
