@@ -760,8 +760,9 @@ a list, that *does* save a lot of typing.
         (progn
           (global-set-key "\C-cnp" #'org-projectile:project-todo-completing-read)
           (org-projectile:per-repo)
-          (setq org-projectile:per-repo-filename "README.org"
-                org-agenda-files (append org-agenda-files (org-projectile:todo-files)))
+          (setq org-projectile:per-repo-filename "README.org")
+          (--each (org-projectile:todo-files)
+            (add-to-list 'org-agenda-files it))
           (add-to-list 'org-capture-templates
                        (org-projectile:project-todo-entry "l" "* TODO %? %a\n" "Linked Project TODO"))))
       (use-package helm-projectile
