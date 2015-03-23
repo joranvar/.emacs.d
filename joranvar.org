@@ -654,6 +654,27 @@ Sync stuff up with my phone!
 
 ** Blogging
 
+Jekyll!
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-publish-project-alist
+        `(("org-github"
+           :base-directory ,(concat joranvar/github-blog-directory "_org")
+           :base-extension "org"
+           :publishing-directory ,joranvar/github-blog-directory
+           :recursive t
+           :publishing-function org-html-publish-to-html
+           :headline-levels 6
+           :html-extension "html"
+           :body-only t
+           :section-numbers nil
+           :table-of-contents nil)))
+#+END_SRC
+
+*** Legacy
+
+I don't use org-page anymore.
+
 #+BEGIN_SRC emacs-lisp
   (use-package org-page
     :ensure t
