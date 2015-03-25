@@ -521,53 +521,55 @@ Keeping things organized, that's an aspiration I'd like to fulfill,
 and org-mode might be the tool that'll save me.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org
-    :init (progn
-            (defvar joranvar/org-directory (f-join joranvar/home "Documents/org")
-              "The location of my org files.")
-            (defvar joranvar/org-default (f-join joranvar/org-directory "default.org")
-              "The location of my default org file."))
-    :bind (("C-c a" . org-agenda)
-           ("C-c c" . org-capture))
-    :config
-    (progn
-      (setq org-agenda-files
-            (-distinct
-             (-concat org-agenda-files
-                      (f--files joranvar/org-directory
-                                (and (f-ext? it "org")
-                                     (not (s-ends-with? "~" (f-filename it))))
-                                t)))
-            org-time-clocksum-format '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)
-            org-clock-into-drawer t
-            org-log-into-drawer t
-            org-startup-folded 'content
-            org-clock-clocked-in-display 'both)
-      (require 'org-capture)
-      (--each '(("m" "Message" entry (file+headline joranvar/org-default "Incoming mail")
-                 "* OPEN Reply to: %:from Subject: %:subject\n   SCHEDULED: %t\n   %U\n   %a" :clock-in t :clock-resume t :immediate-finish t)
-                ("t" "todo" entry (file+headline joranvar/org-default "TASKS")
-                 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-                ("j" "Journal" entry (file+datetree joranvar/org-default "JOURNAL")
-                 "* %?\n%U\n" :clock-in t :clock-resume t))
-        (add-to-list 'org-capture-templates it))
-      (setq org-clock-persist 'history)
-      (org-clock-persistence-insinuate)
-      (add-hook 'before-save-hook #'org-update-all-dblocks)
-      (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
+    (use-package org
+      :init (progn
+              (defvar joranvar/org-directory (f-join joranvar/home "Documents/org")
+                "The location of my org files.")
+              (defvar joranvar/org-default (f-join joranvar/org-directory "default.org")
+                "The location of my default org file."))
+      :bind (("C-c a" . org-agenda)
+             ("C-c c" . org-capture))
+      :config
+      (progn
+        (setq org-agenda-files
+              (-distinct
+               (-concat org-agenda-files
+                        (f--files joranvar/org-directory
+                                  (and (f-ext? it "org")
+                                       (not (s-ends-with? "~" (f-filename it))))
+                                  t)))
+              org-time-clocksum-format '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)
+              org-clock-into-drawer t
+              org-log-into-drawer t
+              org-startup-folded 'content
+              org-clock-clocked-in-display 'both)
+              org-clock-clocked-in-display 'both
+              org-use-speed-commands t)
+        (require 'org-capture)
+        (--each '(("m" "Message" entry (file+headline joranvar/org-default "Incoming mail")
+                   "* OPEN Reply to: %:from Subject: %:subject\n   SCHEDULED: %t\n   %U\n   %a" :clock-in t :clock-resume t :immediate-finish t)
+                  ("t" "todo" entry (file+headline joranvar/org-default "TASKS")
+                   "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+                  ("j" "Journal" entry (file+datetree joranvar/org-default "JOURNAL")
+                   "* %?\n%U\n" :clock-in t :clock-resume t))
+          (add-to-list 'org-capture-templates it))
+        (setq org-clock-persist 'history)
+        (org-clock-persistence-insinuate)
+        (add-hook 'before-save-hook #'org-update-all-dblocks)
+        (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
 
-      ;; Part where I use settings from http://doc.norang.ca/org-mode.html to refile everywhere
+        ;; Part where I use settings from http://doc.norang.ca/org-mode.html to refile everywhere
 
 
-      (setq org-refile-targets '((nil :maxlevel . 9)
-                                 (org-agenda-files :maxlevel . 9)) ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
-            org-refile-use-outline-path t  ; Use full outline paths for refile targets - we file directly with HELM
-            org-outline-path-complete-in-steps nil ; Targets complete directly with HELM
-            org-refile-allow-creating-parent-nodes 'confirm) ; Allow refile to create parent tasks with confirmation
+        (setq org-refile-targets '((nil :maxlevel . 9)
+                                   (org-agenda-files :maxlevel . 9)) ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+              org-refile-use-outline-path t  ; Use full outline paths for refile targets - we file directly with HELM
+              org-outline-path-complete-in-steps nil ; Targets complete directly with HELM
+              org-refile-allow-creating-parent-nodes 'confirm) ; Allow refile to create parent tasks with confirmation
 
-      ;; Workaround for a compatibility issue with the newest emacs from github?
-      (defun org-font-lock-ensure ()
-        (font-lock-fontify-buffer))))
+        ;; Workaround for a compatibility issue with the newest emacs from github?
+        (defun org-font-lock-ensure ()
+          (font-lock-fontify-buffer))))
 #+END_SRC
 
 ** Jira integration
