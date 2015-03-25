@@ -679,13 +679,13 @@ Jekyll!
 I don't use org-page anymore.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org-page
-    :ensure t
-    :config (setq op/repository-directory "~/git_pull/joranvar.github.io"
-                  op/site-domain "http://joranvar.github.io"
-                  op/site-main-title "Growing Software"
-                  op/site-sub-title "for the love of it"
-                  op/personal-github-link "http://github.com/joranvar"))
+  ;; (use-package org-page
+  ;;   :ensure t
+  ;;   :config (setq op/repository-directory "~/git_pull/joranvar.github.io"
+  ;;                 op/site-domain "http://joranvar.github.io"
+  ;;                 op/site-main-title "Growing Software"
+  ;;                 op/site-sub-title "for the love of it"
+  ;;                 op/personal-github-link "http://github.com/joranvar"))
 #+END_SRC
 * Less typing
 
