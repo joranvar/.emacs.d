@@ -44,8 +44,7 @@ configuration at the moment, so I will have to resort to this for now.
     (substitute-in-file-name
      (if (eq system-type 'gnu/linux)
          "$HOME/git_pull/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe"
-       ""))
-       ;; "D:\\Ontwikkeling\\omnisharp-server\\OmniSharp\\bin\\Debug\\OmniSharp.exe"))
+       "D:\\Ontwikkeling\\omnisharp-server\\OmniSharp\\bin\\Debug\\OmniSharp.exe"))
     "The executable that provides csharp checking.")
 #+END_SRC
 
