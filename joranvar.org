@@ -543,6 +543,7 @@ and org-mode might be the tool that'll save me.
             org-log-into-drawer t
             org-startup-folded 'content
             org-clock-clocked-in-display 'both)
+      (require 'org-capture)
       (--each '(("m" "Message" entry (file+headline joranvar/org-default "Incoming mail")
                  "* OPEN Reply to: %:from Subject: %:subject\n   SCHEDULED: %t\n   %U\n   %a" :clock-in t :clock-resume t :immediate-finish t)
                 ("t" "todo" entry (file+headline joranvar/org-default "TASKS")
