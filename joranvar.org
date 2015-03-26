@@ -990,6 +990,23 @@ Most importantly: do not use tabs.
       (add-hook 'haskell-mode-hook #'haskell-indent-mode)))
 #+END_SRC
 
+*** Visual Basic (sad)
+
+#+BEGIN_SRC emacs-lisp
+  (use-package vbasense
+    :ensure t
+    :config
+    (progn
+      (load "visual-basic-mode.el")))
+#+END_SRC
+
+*** Powershell
+
+#+BEGIN_SRC emacs-lisp
+  (use-package powershell
+    :ensure t)
+#+END_SRC
+
 ** Tools
 *** Flycheck
 
