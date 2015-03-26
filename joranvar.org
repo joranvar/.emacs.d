@@ -557,7 +557,6 @@ and org-mode might be the tool that'll save me.
               org-clock-into-drawer t
               org-log-into-drawer t
               org-startup-folded 'content
-              org-clock-clocked-in-display 'both)
               org-clock-clocked-in-display 'both
               org-use-speed-commands t)
         (require 'org-capture)
