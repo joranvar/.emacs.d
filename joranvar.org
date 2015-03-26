@@ -200,6 +200,21 @@ given file. Nearest is: in the same directory or higher.
            (f-relative (car (f-glob glob found)) origin))))
 #+END_SRC
 
+*** Add mode save hook
+
+#+BEGIN_SRC emacs-lisp
+  (defmacro joranvar/add-mode-local-write-contents-functions (mode-hook &rest body)
+    "Add BODY to the write-contents-functions when MODE-HOOK is called.
+
+  Similar to before-save-hook but buffer-local and more applicable."
+    ()
+    `(add-hook ,mode-hook
+               (lambda()
+                 (add-hook 'write-contents-functions
+                           (lambda()
+                             ,@body)))))
+#+END_SRC
+
 ** Tramp configuration
 
 The default prompt recognition setting is not enough for my situation.
@@ -555,8 +570,6 @@ and org-mode might be the tool that'll save me.
           (add-to-list 'org-capture-templates it))
         (setq org-clock-persist 'history)
         (org-clock-persistence-insinuate)
-        (add-hook 'before-save-hook #'org-update-all-dblocks)
-        (add-hook 'before-save-hook #'org-table-recalculate-buffer-tables)
 
         ;; Part where I use settings from http://doc.norang.ca/org-mode.html to refile everywhere
 
@@ -570,6 +583,12 @@ and org-mode might be the tool that'll save me.
         ;; Workaround for a compatibility issue with the newest emacs from github?
         (defun org-font-lock-ensure ()
           (font-lock-fontify-buffer))))
+
+      (joranvar/add-mode-local-write-contents-functions
+       'org-mode-hook
+       (save-excursion
+         (org-update-all-dblocks)
+         (org-table-recalculate-buffer-tables)))
 #+END_SRC
 
 ** Jira integration
