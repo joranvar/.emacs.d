@@ -452,8 +452,11 @@ Show me your face!
 
 *** Refresh mail every two minutes
 
+Do this every 2 minutes (if I'm idle).
+
 #+BEGIN_SRC emacs-lisp
-  (gnus-demon-add-handler 'gnus-group-get-new-news 2 t)
+  (gnus-demon-add-handler #'gnus-demon-scan-news 120 nil)
+  (setq gnus-demon-timestep 1)
   (gnus-demon-init)
 #+END_SRC
 
