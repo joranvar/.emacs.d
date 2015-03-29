@@ -1229,5 +1229,6 @@ Keep an eye on everything.
   (use-package sauron
     :ensure t
     :init (sauron-start)
-    :config (setq sauron-sticky-frame t))
+    :config (setq sauron-sticky-frame t
+                  sauron-hide-mode-line t))
 #+END_SRC
