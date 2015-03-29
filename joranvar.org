@@ -428,12 +428,33 @@ manually ask it to get the mail, please.
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'gnus-get-new-news-hook
-            (lambda () (shell-command
+            (lambda ()
+              (async-start
+               `(lambda ()
+                  (package-initialize)
+                  (require 'dash)
+                  (shell-command
                    (concat
                     (if (eq system-type 'windows-nt)
                         "plink -load Home "
-                      (concat "ssh " joranvar/mailserver))
-                    " 'offlineimap'") "*offlineimap*")))
+                      ,(concat "ssh " joranvar/mailserver))
+                    " 'offlineimap'") "*offline-imap*")
+                  (with-current-buffer "*offline-imap*"
+                    (goto-char (point-min))
+                    (--map (cons (car it) (length (cdr it)))
+                           (--group-by it
+                                       (--unfold
+                                        (when (re-search-forward "^ Copy.*-> Local-\\(.*\\)$" nil t)
+                                          (cons (substring-no-properties (match-string 1)) nil))
+                                        nil)))))
+               (lambda (result)
+                 (when result
+                   (sauron-add-event
+                    'gnus
+                    3
+                    (s-lex-format "${result}")
+                    nil
+                    nil))))))
 #+END_SRC
 
 *** Gravatars
