@@ -457,6 +457,16 @@ manually ask it to get the mail, please.
                     nil))))))
 #+END_SRC
 
+*** Refresh mail
+
+Do this every five minutes, idle or not (async anyway).
+
+#+BEGIN_SRC emacs-lisp
+  (gnus-demon-add-handler #'gnus-demon-scan-news 5 nil)
+  (setq gnus-demon-timestep 60)
+  (gnus-demon-init)
+#+END_SRC
+
 *** Gravatars
 
 Show me your face!
@@ -469,16 +479,6 @@ Show me your face!
 
 #+BEGIN_SRC emacs-lisp
   (setq gnus-summary-line-format "%U%R%z%I%(%[%4L: %-23,23f%]%) %o %s\n")
-#+END_SRC
-
-*** Refresh mail every two minutes
-
-Do this every 2 minutes (if I'm idle).
-
-#+BEGIN_SRC emacs-lisp
-  (gnus-demon-add-handler #'gnus-demon-scan-news 120 nil)
-  (setq gnus-demon-timestep 1)
-  (gnus-demon-init)
 #+END_SRC
 
 *** Sign mails by default
