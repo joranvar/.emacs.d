@@ -1197,3 +1197,13 @@ I want to see the agenda, so skip the splash screen.
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-startup-screen t)
 #+END_SRC
+** Sauron
+
+Keep an eye on everything.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package sauron
+    :ensure t
+    :init (sauron-start)
+    :config (setq sauron-sticky-frame t))
+#+END_SRC
