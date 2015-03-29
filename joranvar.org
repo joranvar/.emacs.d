@@ -1019,8 +1019,8 @@ Most importantly: do not use tabs.
 *** Powershell
 
 #+BEGIN_SRC emacs-lisp
-  (use-package powershell
-    :ensure t)
+  ;;(use-package powershell
+  ;;  :ensure t)
 #+END_SRC
 
 ** Tools
