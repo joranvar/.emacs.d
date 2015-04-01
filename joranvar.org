@@ -278,7 +278,7 @@ org-mode headings.
 For dark mode, tango-2 seems best suited.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package tango-2-theme
+  (use-package material-theme
     :ensure t
     :defer t)
 #+END_SRC
@@ -287,7 +287,7 @@ For dark mode, tango-2 seems best suited.
 I want to be able to toggle between light and dark mode (when contrast is needed).
 
 #+BEGIN_SRC emacs-lisp
-  (defvar joranvar/dark-theme 'tango-2
+  (defvar joranvar/dark-theme 'material
     "Theme for dark frame background mode")
 
   (defvar joranvar/light-theme 'leuven
