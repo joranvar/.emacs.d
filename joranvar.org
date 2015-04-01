@@ -1193,6 +1193,12 @@ has not yet been changed by me), sounds logical!
   (global-auto-revert-mode)
 #+END_SRC
 
+** Clipboard into kill-ring before kill
+
+#+BEGIN_SRC emacs-lisp
+  (setq save-interprogram-paste-before-kill t)
+#+END_SRC
+
 * Startup
 
 Finally, when I start up emacs, I want the following to be setup for
