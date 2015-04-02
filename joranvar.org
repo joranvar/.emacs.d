@@ -1236,7 +1236,10 @@ Keep an eye on everything.
 #+BEGIN_SRC emacs-lisp
   (use-package sauron
     :ensure t
-    :init (sauron-start)
-    :config (setq sauron-sticky-frame t
-                  sauron-hide-mode-line t))
+    :config (progn
+              (setq sauron-sticky-frame t
+                    sauron-hide-mode-line t)
+              (if (eq system-type 'windows-nt)
+                  (setq sauron-modules (--remove (eq it 'sauron-dbus) sauron-modules)))
+              (sauron-start)))
 #+END_SRC
