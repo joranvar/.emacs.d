@@ -453,7 +453,11 @@ manually ask it to get the mail, please.
                     'gnus
                     3
                     (s-lex-format "${result}")
-                    nil
+                    (lambda ()
+                      (gnus-demon-scan-news)
+                      (let ((f (make-frame)))
+                        (select-frame f)
+                        (pop-to-buffer-same-window "*Group*")))
                     nil))))))
 #+END_SRC
 
