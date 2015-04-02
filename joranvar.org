@@ -368,7 +368,7 @@ offlineimap way, and have everything sent to my inbox locally.
 #+BEGIN_SRC emacs-lisp
   (setq gnus-posting-styles `(("^nnimap\\+server:"
                                (address ,joranvar/work-mail)
-                               ("X-Message-SMTP-Method" ,(concat "smtp localhost 1025 " joranvar/work-mail))
+                               ("X-Message-SMTP-Method" ,(concat "smtp 127.0.0.1 1025 " joranvar/work-mail))
                                (signature ,joranvar/work-signature))
                               ("^nnimap\\+gmail:"
                                (address joranvar/gmail-mail)
