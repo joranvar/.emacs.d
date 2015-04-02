@@ -330,7 +330,7 @@ Yummy looking code everywhere!
   (global-prettify-symbols-mode t)
 #+END_SRC
 
-* Email
+* Communication
 
 Gnus should be a nice mail reader, so I'm gonna try and use it for my
 work mails when at work.
@@ -527,6 +527,16 @@ Manage contacts!
         (bbdb-initialize 'gnus 'message)
         (bbdb-insinuate-message)
         (bbdb-insinuate-gnus)))
+#+END_SRC
+
+** Jabber
+
+#+BEGIN_SRC emacs-lisp
+  (use-package jabber
+    :ensure t
+    :config (setq jabber-account-list
+                `((,joranvar/work-jabber-account
+                   (:connection-type . starttls)))))
 #+END_SRC
 
 * Productivity
