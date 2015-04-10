@@ -1215,6 +1215,18 @@ has not yet been changed by me), sounds logical!
   (setq save-interprogram-paste-before-kill t)
 #+END_SRC
 
+** Multiple cursors
+
+I have heard about it. I'd like to use it.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package multiple-cursors
+    :ensure t
+    :bind (("C->" . mc/mark-next-like-this)
+           ("C-<" . mc/mark-previous-like-this)
+           ("C-c C-<" . mc/mark-all-like-this)))
+#+END_SRC
+
 * Startup
 
 Finally, when I start up emacs, I want the following to be setup for
