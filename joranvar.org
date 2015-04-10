@@ -1024,6 +1024,12 @@ For now, we just include [[https://github.com/sensorflo/sln-mode][sensorflo]]s s
   (add-hook 'c-mode-hook (lambda() (c-set-offset 'arglist-open '+)))
 #+END_SRC
 
+**** Subword mode
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'c-mode-hook 'subword-mode)
+#+END_SRC
+
 *** F#
 
 F# is one of the functional languages that I'm really interested
