@@ -536,11 +536,11 @@ Manage contacts!
 ** Jabber
 
 #+BEGIN_SRC emacs-lisp
-  (use-package jabber
-    :ensure t
-    :config (setq jabber-account-list
-                `((,joranvar/work-jabber-account
-                   (:connection-type . starttls)))))
+  ;; (use-package jabber
+  ;;   :ensure t
+  ;;   :config (setq jabber-account-list
+  ;;               `((,joranvar/work-jabber-account
+  ;;                  (:connection-type . starttls)))))
 #+END_SRC
 
 * Productivity
