@@ -1055,9 +1055,13 @@ Most importantly: do not use tabs.
     :ensure t
     :config
     (progn
-      (use-package shm
+      (use-package hindent
         :ensure t
-        :config (add-hook 'haskell-mode-hook #'structured-haskell-mode))
+        :config (progn
+                  (define-key haskell-mode-map (kbd "C-c i") 'hindent/reformat-decl)
+                  (setq hindent-style "johan-tibell")
+                  (add-hook 'haskell-mode-hook #'hindent-mode)))
+      (add-hook 'haskell-mode-hook #'haskell-indentation-mode)
       (add-hook 'haskell-mode-hook #'interactive-haskell-mode)))
 #+END_SRC
 
