@@ -135,6 +135,7 @@ Also, I encrypt files to myself, always, so I need to set the key.
   (require 'package)
   (add-to-list 'package-archives
                '("melpa" . "http://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
   (setq load-prefer-newer t)
   (package-initialize)
   (unless (package-installed-p 'use-package)
@@ -375,52 +376,6 @@ offlineimap way, and have everything sent to my inbox locally.
                                ("X-Message-SMTP-Method" ,(concat "smtp smtp.gmail.com 587 " joranvar/gmail-mail)))))
 #+END_SRC
 
-*** Formatting mail
-
-The following converts org-mode style to a multipart/alternative mime
-section.
-
-#+BEGIN_SRC emacs-lisp
-  (defun joranvar/htmlize-signature (signature)
-    "Create html from a SIGNATURE."
-    (s-join "<br />\n" (--map-indexed (cond ((s-contains? "@" it)
-                                             (s-lex-format "<a style='font-size:9pt' href='mailto:${it}'>${it}</a>"))
-                                            ((s-starts-with? "www." it)
-                                             (s-lex-format "<a style='font-size:9pt' href='http://${it}'>${it}</a>"))
-                                            ((s-starts-with? "S" it)
-                                             (s-lex-format "<span style='font-size:9pt; color:#003366'><b>${it}</b></span>"))
-                                            ((s-starts-with? "Before printing" it)
-                                             (s-lex-format "<span style='font-size:9pt; color:#00B050'><b>${it}</b></span>"))
-                                            ((s-starts-with? "DISCLAIMER: " it)
-                                             (let ((disclaimer-text (s-chop-prefix "DISCLAIMER: " it)))
-                                               (s-lex-format "<span style='font-size:8pt; color:#6F6F6E'><b>DISCLAIMER: </b>${disclaimer-text}</span>")))
-                                            ((eq it-index 1)
-                                             (s-lex-format "<span style='font-size:10pt; color:#003366'><b>${it}</b></span>"))
-                                            ((eq it-index 2)
-                                             (s-lex-format "<span style='font-size:9pt; color:gray'>${it}</span><span style='font-size:7pt'><br /></span>"))
-                                            (t
-                                             (s-lex-format "<span style='font-size:9pt; color:gray'>${it}</span>"))
-                                            )
-                                      (s-lines signature))))
-
-  (defun joranvar/org-mime ()
-    "Convert the body of this message from org-mode format to multipart/alternative html."
-    (interactive)
-    (save-excursion
-      (let* ((body-point (progn (message-goto-body) (when (looking-at "^\<#secure") (forward-line)) (point)))
-             (signature-point (progn (message-goto-signature) (point)))
-             (body-text (buffer-substring-no-properties body-point signature-point))
-             (signature-text (buffer-substring-no-properties signature-point (point-max))))
-        (goto-char body-point)
-        (set-mark signature-point)
-        (org-html-convert-region-to-html)
-        (insert (joranvar/htmlize-signature signature-text))
-        (insert "\n<#/multipart>")
-        (kill-region (point) (point-max))
-        (goto-char body-point)
-        (insert (concat "<#multipart type=alternative>\n" body-text "\n" signature-text "\n<#part type=text/html>\n")))))
-#+END_SRC
-
 *** Fetching mail
 
 I use offlineimap, and do not want to have that autocycling, so I will
@@ -582,8 +537,11 @@ and org-mode might be the tool that'll save me.
               "The location of my default org file."))
     :bind (("C-c a" . org-agenda)
            ("C-c c" . org-capture))
+    :demand t
     :config
     (progn
+      (unless (package-installed-p 'org-plus-contrib)
+        (package-install 'org-plus-contrib))
       (setq org-agenda-files
             (-distinct
              (-concat org-agenda-files
@@ -800,29 +758,24 @@ a list, that *does* save a lot of typing.
     :bind (("M-p" . helm-projectile)
            ("M-P" . projectile-persp-switch-project))
     :diminish projectile-mode
-    :init
+    :config
     (progn
-      (use-package perspective
-        :ensure t
-        :config (progn (persp-mode)
-                       (use-package persp-projectile
-                         :ensure t)))
       (projectile-global-mode)
       (setq projectile-indexing-method 'alien
             projectile-completion-system 'helm
             projectile-enable-caching t
             projectile-enable-idle-timer t)
-      (use-package org-projectile
-        :ensure t
-        :config
-        (progn
-          (global-set-key "\C-cnp" #'org-projectile:project-todo-completing-read)
-          (org-projectile:per-repo)
-          (setq org-projectile:per-repo-filename "README.org")
-          (--each (org-projectile:todo-files)
-            (add-to-list 'org-agenda-files it))
-          (add-to-list 'org-capture-templates
-                       (org-projectile:project-todo-entry "l" "* TODO %? %a\n" "Linked Project TODO"))))
+      ;; (use-package org-projectile
+      ;;   :ensure t
+      ;;   :config
+      ;;   (progn
+      ;;     (global-set-key "\C-cnp" #'org-projectile:project-todo-completing-read)
+      ;;     (org-projectile:per-repo)
+      ;;     (setq org-projectile:per-repo-filename "README.org")
+      ;;     (--each (org-projectile:todo-files)
+      ;;       (add-to-list 'org-agenda-files it))
+      ;;     (add-to-list 'org-capture-templates
+      ;;                  (org-projectile:project-todo-entry "l" "* TODO %? %a\n" "Linked Project TODO"))))
       (use-package helm-projectile
         :ensure t
         :config
@@ -834,6 +787,19 @@ a list, that *does* save a lot of typing.
                                                (file-directory-p (concat project "/.git/")))
                                              (projectile-relevant-known-projects)))
             magit-repo-dirs-depth 1)))
+#+END_SRC
+
+** Perspective
+
+Use perspective, to group together windows that belong to the same
+project.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package perspective
+    :ensure t
+    :config (progn (persp-mode)
+                   (use-package persp-projectile
+                     :ensure t)))
 #+END_SRC
 
 ** Focus-follow-mouse
@@ -1251,14 +1217,6 @@ I have heard about it. I'd like to use it.
 Finally, when I start up emacs, I want the following to be setup for
 me.
 
-** Create mail perspective with gnus
-
-#+BEGIN_SRC emacs-lisp
-  (save-excursion
-    (persp-switch "mail")
-    (gnus))
-#+END_SRC
-
 ** Create main perspective with org agenda
 
 #+BEGIN_SRC emacs-lisp
@@ -1281,7 +1239,7 @@ Keep an eye on everything.
 #+BEGIN_SRC emacs-lisp
   (use-package sauron
     :ensure t
-    :config (progn
+    :init (progn
               (setq sauron-sticky-frame t
                     sauron-hide-mode-line t)
               (if (eq system-type 'windows-nt)
