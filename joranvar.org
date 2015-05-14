@@ -916,7 +916,8 @@ not (yet) work in the windows host, so we don't load it there.
         :ensure t
         :config (add-hook 'magit-status-mode-hook #'magit-filenotify-mode))
       (add-to-list 'magit-repo-dirs (expand-file-name "~/git_pull/"))
-      (setq magit-status-buffer-switch-function 'switch-to-buffer)))
+      (setq magit-status-buffer-switch-function 'switch-to-buffer)
+      (setq magit-last-seen-setup-instructions "1.4.0")))
 #+END_SRC
 
 ** Diff highlighting
