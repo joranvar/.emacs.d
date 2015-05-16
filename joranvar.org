@@ -455,6 +455,13 @@ Show me your face!
   (setq gnus-unbuttonized-mime-types nil)
 #+END_SRC
 
+*** View text as simple as possible
+
+#+BEGIN_SRC emacs-lisp
+  (setq mm-discouraged-alternatives '("text/html" "text/richtext")
+        mm-automatic-display (remove "text/html" mm-automatic-display))
+#+END_SRC
+
 *** End of gnus config
 
 #+BEGIN_SRC emacs-lisp
